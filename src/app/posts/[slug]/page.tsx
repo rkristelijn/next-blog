@@ -2,8 +2,24 @@ import { notFound } from 'next/navigation';
 import { Container, Box } from '@mui/material';
 import Navigation from '@/components/Navigation';
 import PostContent from '@/components/PostContent';
-import { getPostBySlug } from '@/lib/posts';
+import { getPostBySlug, getAllPostSlugs } from '@/lib/posts';
 import type { PostPageProps } from '@/types';
+
+/**
+ * Generate static params for all blog posts at build time
+ */
+export async function generateStaticParams() {
+  try {
+    const slugs = getAllPostSlugs();
+    console.log('Generated static params for slugs:', slugs);
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
 
 /**
  * Individual blog post page - displays a single blog post
@@ -11,6 +27,8 @@ import type { PostPageProps } from '@/types';
  * This page follows the C4C principle by using clear, reusable components
  * and proper error handling. It also follows the HIPI principle by hiding
  * data fetching logic behind clean interfaces.
+ * 
+ * Uses static generation to pre-render all post pages at build time.
  */
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;

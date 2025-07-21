@@ -8,8 +8,11 @@ import { getAllPosts } from '@/lib/posts';
  * 
  * This page follows the C4C principle by using clear, reusable components
  * and the HIPI principle by hiding implementation details behind clean interfaces.
+ * 
+ * Uses static generation to pre-render all posts at build time.
  */
-export default function PostsPage() {
+export default async function PostsPage() {
+  // Fetch posts at build time, not runtime
   const posts = getAllPosts();
 
   return (

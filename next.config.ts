@@ -1,18 +1,20 @@
 import type { NextConfig } from "next";
-import createMDX from '@next/mdx';
 
-const withMDX = createMDX({
-  // Add markdown plugins here, if needed
-  // remarkPlugins: [],
-  // rehypePlugins: [],
-});
-
+/**
+ * Next.js configuration optimized for Cloudflare deployment
+ * 
+ * This configuration follows the RTFM principle by using
+ * Next.js conventions and the KISS principle by keeping
+ * configuration simple and focused.
+ */
 const nextConfig: NextConfig = {
-  /* config options here */
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;
 
 // added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';

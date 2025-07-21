@@ -4,6 +4,248 @@
 
 This document describes the architecture of our Next.js blog application, built with modern web technologies and following best practices for performance, maintainability, and scalability.
 
+## C4 Model Diagrams
+
+### Level 1: System Context Diagram
+
+```mermaid
+graph TB
+    User[👤 User] --> Blog[Next.js Blog System]
+    Blog --> Cloudflare[🌐 Cloudflare Pages]
+    Blog --> GitHub[📦 GitHub Repository]
+    
+    subgraph "External Systems"
+        Cloudflare
+        GitHub
+    end
+    
+    subgraph "Next.js Blog System"
+        NextJS[Next.js 15 Application]
+        MDX[MDX Content Files]
+        MUI[Material-UI Components]
+    end
+    
+    style Blog fill:#e1f5fe
+    style Cloudflare fill:#fff3e0
+    style GitHub fill:#f3e5f5
+    style NextJS fill:#e8f5e8
+    style MDX fill:#fff8e1
+    style MUI fill:#fce4ec
+```
+
+**Description:**
+- **User**: End users accessing the blog through web browsers
+- **Next.js Blog System**: The main application containing the blog functionality
+- **Cloudflare Pages**: Static hosting and CDN for global content delivery
+- **GitHub Repository**: Source code management and CI/CD pipeline
+
+### Level 2: Container Diagram
+
+```mermaid
+graph TB
+    User[👤 User] --> WebApp[🌐 Web Application]
+    
+    subgraph "Next.js Blog System"
+        WebApp --> StaticGen[📄 Static Generator]
+        WebApp --> ContentFS[📁 Content File System]
+        WebApp --> ThemeSystem[🎨 Theme System]
+        
+        StaticGen --> BuildProcess[🔨 Build Process]
+        ContentFS --> MDXParser[📝 MDX Parser]
+        ThemeSystem --> MUIComponents[🧩 MUI Components]
+    end
+    
+    subgraph "Deployment & Infrastructure"
+        BuildProcess --> CloudflarePages[☁️ Cloudflare Pages]
+        CloudflarePages --> CDN[🌍 Global CDN]
+        GitHubActions[⚙️ GitHub Actions] --> BuildProcess
+    end
+    
+    subgraph "Development Tools"
+        TypeScript[📘 TypeScript] --> WebApp
+        ESLint[🔍 ESLint] --> WebApp
+        OpenNext[🚀 OpenNext] --> BuildProcess
+    end
+    
+    style WebApp fill:#e3f2fd
+    style StaticGen fill:#e8f5e8
+    style ContentFS fill:#fff3e0
+    style ThemeSystem fill:#fce4ec
+    style CloudflarePages fill:#e1f5fe
+    style CDN fill:#f3e5f5
+```
+
+**Description:**
+- **Web Application**: Next.js 15 application with App Router
+- **Static Generator**: Build-time static site generation
+- **Content File System**: MDX files stored in the file system
+- **Theme System**: Material-UI theming and component system
+- **Build Process**: OpenNext-powered build for Cloudflare deployment
+- **Global CDN**: Cloudflare's worldwide content delivery network
+
+### Level 3: Component Diagram
+
+```mermaid
+graph TB
+    subgraph "Next.js Blog Application"
+        subgraph "App Router Layer"
+            RootLayout[🏗️ Root Layout]
+            HomePage[🏠 Home Page]
+            PostsPage[📋 Posts Page]
+            PostPage[📄 Individual Post Page]
+        end
+        
+        subgraph "Component Layer"
+            Navigation[🧭 Navigation]
+            PostCard[📝 Post Card]
+            PostContent[📖 Post Content]
+            ThemeRegistry[🎨 Theme Registry]
+            ErrorBoundary[⚠️ Error Boundary]
+            Header[📰 Header]
+            Hero[🌟 Hero]
+            Features[✨ Features]
+            Footer[🦶 Footer]
+        end
+        
+        subgraph "Data Layer"
+            PostsLib[📚 Posts Library]
+            ThemeLib[🎨 Theme Library]
+            TypesLib[📘 Types Library]
+        end
+        
+        subgraph "Content Layer"
+            MDXFiles[📄 MDX Files]
+            GrayMatter[🔍 Gray Matter Parser]
+            ReactMarkdown[📝 React Markdown]
+        end
+    end
+    
+    RootLayout --> Navigation
+    RootLayout --> ThemeRegistry
+    RootLayout --> ErrorBoundary
+    
+    HomePage --> Header
+    HomePage --> Hero
+    HomePage --> Features
+    HomePage --> Footer
+    
+    PostsPage --> Navigation
+    PostsPage --> PostCard
+    
+    PostPage --> Navigation
+    PostPage --> PostContent
+    
+    PostsLib --> MDXFiles
+    PostsLib --> GrayMatter
+    PostContent --> ReactMarkdown
+    
+    ThemeRegistry --> ThemeLib
+    ThemeRegistry --> MUIComponents[MUI Components]
+    
+    style RootLayout fill:#e8f5e8
+    style HomePage fill:#e8f5e8
+    style PostsPage fill:#e8f5e8
+    style PostPage fill:#e8f5e8
+    style Navigation fill:#e3f2fd
+    style PostCard fill:#e3f2fd
+    style PostContent fill:#e3f2fd
+    style ThemeRegistry fill:#e3f2fd
+    style PostsLib fill:#fff3e0
+    style ThemeLib fill:#fff3e0
+    style MDXFiles fill:#fce4ec
+```
+
+**Description:**
+- **App Router Layer**: Next.js 15 App Router pages and layouts
+- **Component Layer**: Reusable React components with Material-UI
+- **Data Layer**: Utility libraries for data operations and theming
+- **Content Layer**: MDX content processing and rendering
+
+### Level 4: Code Diagram (Key Components)
+
+```mermaid
+graph TB
+    subgraph "Core Components"
+        subgraph "Layout Components"
+            RootLayout[RootLayout.tsx]
+            Navigation[Navigation.tsx]
+            ErrorBoundary[ErrorBoundary.tsx]
+        end
+        
+        subgraph "Page Components"
+            HomePage[page.tsx]
+            PostsPage[posts/page.tsx]
+            PostPage[posts/[slug]/page.tsx]
+        end
+        
+        subgraph "Content Components"
+            PostCard[PostCard.tsx]
+            PostContent[PostContent.tsx]
+            Header[Header.tsx]
+            Hero[Hero.tsx]
+            Features[Features.tsx]
+            Footer[Footer.tsx]
+        end
+        
+        subgraph "Utility Components"
+            ThemeRegistry[ThemeRegistry.tsx]
+        end
+    end
+    
+    subgraph "Data & Configuration"
+        PostsLib[lib/posts.ts]
+        ThemeLib[lib/theme.ts]
+        TypesLib[types/index.ts]
+        NextConfig[next.config.ts]
+        WranglerConfig[wrangler.jsonc]
+    end
+    
+    subgraph "Content Structure"
+        MDXFiles[content/posts/*.mdx]
+        GrayMatter[gray-matter]
+        ReactMarkdown[react-markdown]
+    end
+    
+    RootLayout --> ThemeRegistry
+    RootLayout --> ErrorBoundary
+    
+    HomePage --> Header
+    HomePage --> Hero
+    HomePage --> Features
+    HomePage --> Footer
+    
+    PostsPage --> PostCard
+    PostsPage --> PostsLib
+    
+    PostPage --> PostContent
+    PostPage --> PostsLib
+    
+    PostCard --> TypesLib
+    PostContent --> ReactMarkdown
+    
+    PostsLib --> MDXFiles
+    PostsLib --> GrayMatter
+    
+    ThemeRegistry --> ThemeLib
+    
+    style RootLayout fill:#e8f5e8
+    style HomePage fill:#e8f5e8
+    style PostsPage fill:#e8f5e8
+    style PostPage fill:#e8f5e8
+    style PostCard fill:#e3f2fd
+    style PostContent fill:#e3f2fd
+    style PostsLib fill:#fff3e0
+    style ThemeLib fill:#fff3e0
+    style MDXFiles fill:#fce4ec
+```
+
+**Description:**
+- **Layout Components**: Application shell and navigation
+- **Page Components**: Main page implementations
+- **Content Components**: Content display and presentation
+- **Data & Configuration**: Core libraries and configuration files
+- **Content Structure**: MDX content and processing tools
+
 ## Technology Stack
 
 ### Core Framework
@@ -143,7 +385,9 @@ src/content/posts/
 ├── 05-optimizing-code-quality.mdx
 ├── 06-ai-assisted-development.mdx
 ├── 07-next-steps.mdx
-└── phase-1-project-setup.mdx
+├── 08-architecture-overview.mdx
+├── 09-user-guide.mdx
+└── 10-developer-guide.mdx
 ```
 
 ## Routing Architecture
@@ -252,4 +496,6 @@ src/content/posts/
 
 This architecture provides a solid foundation for a modern, performant blog application. The combination of Next.js 15, Material-UI, and Cloudflare Pages creates a scalable, maintainable, and user-friendly platform that can grow with your needs.
 
-The modular component architecture, clear data flow, and separation of concerns make the codebase easy to understand, maintain, and extend. The static generation approach ensures excellent performance while the file-based content management system provides flexibility for content creators. 
+The modular component architecture, clear data flow, and separation of concerns make the codebase easy to understand, maintain, and extend. The static generation approach ensures excellent performance while the file-based content management system provides flexibility for content creators.
+
+The C4 model diagrams provide different levels of architectural detail, from high-level system context to detailed component relationships, making it easier for developers to understand and contribute to the system. 
