@@ -1,0 +1,46 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.posts {
+  margin-top: 2rem;
+}
+
+.post {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.post:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.post h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.post h2 a {
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.post h2 a:hover {
+  color: #3b82f6;
+}
+
+.excerpt {
+  color: #6b7280;
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.date {
+  color: #9ca3af;
+  font-size: 0.875rem;
+} 

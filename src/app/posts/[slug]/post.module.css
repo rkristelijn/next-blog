@@ -1,0 +1,97 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.post {
+  line-height: 1.7;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  color: #1f2937;
+}
+
+.date {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.content {
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+/* Markdown content styling */
+.content h1 {
+  margin: 2rem 0 1rem 0;
+  font-size: 2rem;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.content h2 {
+  margin: 2rem 0 1rem 0;
+  font-size: 1.75rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.content h3 {
+  margin: 1.5rem 0 0.75rem 0;
+  font-size: 1.5rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.content p {
+  margin: 1rem 0;
+  line-height: 1.7;
+}
+
+.content ul, .content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.content li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.content strong {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.content code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.content pre {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid #e5e7eb;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+  color: #374151;
+} 
