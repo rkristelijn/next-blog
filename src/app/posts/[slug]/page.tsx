@@ -1,6 +1,18 @@
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
-import styles from './post.module.css';
+import { 
+  Container, 
+  Typography, 
+  Box, 
+  AppBar, 
+  Toolbar, 
+  Button 
+} from '@mui/material';
+import { 
+  ArrowBack as ArrowBackIcon,
+  Home as HomeIcon
+} from '@mui/icons-material';
+import Link from 'next/link';
 
 // This would typically come from a CMS or file system
 const posts = {
@@ -62,16 +74,68 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className={styles.container}>
-      <article className={styles.post}>
-        <header className={styles.header}>
-          <h1>{post.title}</h1>
-          <time className={styles.date}>{post.date}</time>
-        </header>
-        <div className={styles.content}>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <AppBar position="static" color="default" elevation={1}>
+        <Toolbar>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            href="/"
+            startIcon={<HomeIcon />}
+          >
+            Home
+          </Button>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            href="/posts"
+            startIcon={<ArrowBackIcon />}
+            sx={{ ml: 1 }}
+          >
+            Blog Posts
+          </Button>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 2 }}>
+            {post.title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h3" component="h1" gutterBottom>
+            {post.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            {post.date}
+          </Typography>
+        </Box>
+        
+        <Box sx={{ 
+          '& h1': { fontSize: '2rem', fontWeight: 700, mb: 2, mt: 3 },
+          '& h2': { fontSize: '1.75rem', fontWeight: 600, mb: 1.5, mt: 2.5 },
+          '& h3': { fontSize: '1.5rem', fontWeight: 600, mb: 1, mt: 2 },
+          '& p': { mb: 1.5, lineHeight: 1.7 },
+          '& ul, & ol': { mb: 1.5, pl: 3 },
+          '& li': { mb: 0.5 },
+          '& strong': { fontWeight: 600 },
+          '& code': { 
+            backgroundColor: '#f5f5f5', 
+            padding: '0.125rem 0.25rem', 
+            borderRadius: '0.25rem',
+            fontFamily: 'monospace',
+            fontSize: '0.875rem'
+          },
+          '& pre': {
+            backgroundColor: '#f5f5f5',
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            overflow: 'auto',
+            mb: 1.5
+          }
+        }}>
           <ReactMarkdown>{post.content}</ReactMarkdown>
-        </div>
-      </article>
-    </div>
+        </Box>
+      </Container>
+    </Box>
   );
 } 
