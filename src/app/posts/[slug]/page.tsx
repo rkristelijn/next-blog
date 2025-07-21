@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation';
 import PostContent from '@/components/PostContent';
 import { getPostBySlug, getAllPostSlugs } from '@/lib/posts';
 import type { PostPageProps } from '@/types';
+import type { Metadata } from 'next';
 
 /**
  * Generate static params for all blog posts at build time
@@ -19,6 +20,25 @@ export async function generateStaticParams() {
     console.error('Error generating static params:', error);
     return [];
   }
+}
+
+/**
+ * Generate metadata for individual post pages
+ */
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+  };
 }
 
 /**

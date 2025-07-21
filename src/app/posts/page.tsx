@@ -2,6 +2,18 @@ import { Container, Typography, Box } from '@mui/material';
 import Navigation from '@/components/Navigation';
 import PostCard from '@/components/PostCard';
 import { getAllPosts } from '@/lib/posts';
+import type { Metadata } from 'next';
+
+/**
+ * Generate metadata for the posts page
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const posts = getAllPosts();
+  return {
+    title: 'Blog Posts',
+    description: `Browse all ${posts.length} blog posts`,
+  };
+}
 
 /**
  * Posts listing page - displays all available blog posts
