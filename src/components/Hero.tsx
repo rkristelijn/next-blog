@@ -6,7 +6,6 @@
  * principle by focusing only on hero content.
  */
 
-import Image from "next/image";
 import Link from "next/link";
 import { 
   Container, 
@@ -16,8 +15,7 @@ import {
   Stack 
 } from '@mui/material';
 import { 
-  Article as ArticleIcon,
-  School as SchoolIcon
+  Article as ArticleIcon
 } from '@mui/icons-material';
 
 /**
@@ -25,17 +23,8 @@ import {
  */
 export default function Hero() {
   return (
-    <Container maxWidth="lg" sx={{ flex: 1, py: 8 }}>
+    <Container maxWidth="lg" sx={{ flex: 1, py: 8, backgroundColor: 'background.default' }}>
       <Box sx={{ textAlign: 'center', mb: 8 }}>
-        <Image
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-          style={{ marginBottom: '2rem' }}
-        />
-        
         <Typography variant="h2" component="h1" gutterBottom>
           Welcome to My Blog
         </Typography>
@@ -52,16 +41,6 @@ export default function Hero() {
             startIcon={<ArticleIcon />}
           >
             Read Blog Posts
-          </Button>
-          <Button
-            variant="outlined"
-            size="large"
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-            startIcon={<SchoolIcon />}
-          >
-            Next.js Docs
           </Button>
         </Stack>
       </Box>

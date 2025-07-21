@@ -7,8 +7,9 @@
  */
 
 import Link from 'next/link';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Article as ArticleIcon } from '@mui/icons-material';
+import ThemeToggle from './ThemeToggle';
 
 interface HeaderProps {
   title?: string;
@@ -31,16 +32,20 @@ export default function Header({
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
-        {showBlogPostsButton && (
-          <Button 
-            color="inherit" 
-            component={Link} 
-            href="/posts"
-            startIcon={<ArticleIcon />}
-          >
-            Blog Posts
-          </Button>
-        )}
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {showBlogPostsButton && (
+            <Button 
+              color="inherit" 
+              component={Link} 
+              href="/posts"
+              startIcon={<ArticleIcon />}
+            >
+              Blog Posts
+            </Button>
+          )}
+          <ThemeToggle />
+        </Box>
       </Toolbar>
     </AppBar>
   );

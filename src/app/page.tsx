@@ -12,7 +12,12 @@ import Footer from '@/components/Footer';
  */
 export default function Home() {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ 
+      minHeight: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      backgroundColor: 'background.default'
+    }}>
       <Header title="Next.js Blog" showBlogPostsButton={true} />
       <Hero />
       <Features />

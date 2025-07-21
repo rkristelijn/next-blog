@@ -36,18 +36,27 @@ export default function PostContent({ post }: PostContentProps) {
         '& li': { mb: 0.5 },
         '& strong': { fontWeight: 600 },
         '& code': { 
-          backgroundColor: '#f5f5f5', 
+          backgroundColor: 'action.hover', 
+          color: 'text.primary',
           padding: '0.125rem 0.25rem', 
           borderRadius: '0.25rem',
           fontFamily: 'monospace',
           fontSize: '0.875rem'
         },
         '& pre': {
-          backgroundColor: '#f5f5f5',
+          backgroundColor: 'background.paper',
+          border: 1,
+          borderColor: 'divider',
           padding: '1rem',
           borderRadius: '0.5rem',
           overflow: 'auto',
-          mb: 1.5
+          mb: 1.5,
+          '& code': {
+            backgroundColor: 'transparent',
+            padding: 0,
+            borderRadius: 0,
+            color: 'text.primary'
+          }
         }
       }}>
         <ReactMarkdown>{post.content}</ReactMarkdown>

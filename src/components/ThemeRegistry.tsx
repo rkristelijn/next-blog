@@ -6,19 +6,121 @@
  * and follows the HIPI principle by hiding complex emotion setup behind
  * a simple interface.
  * 
- * Implementation based on emotion-js recommendations:
- * https://github.com/emotion-js/emotion/issues/2928#issuecomment-1319747902
+ * Implementation based on MUI Next.js documentation:
+ * https://mui.com/material-ui/guides/next-js-app-router/
  */
 
 'use client';
 
-import createCache from '@emotion/cache';
-import { useServerInsertedHTML } from 'next/navigation';
-import { CacheProvider } from '@emotion/react';
-import { ThemeProvider } from '@mui/material/styles';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import theme from '../lib/theme';
-import { useState } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+// Theme context
+const ThemeContext = createContext<{
+  mode: 'light' | 'dark';
+  toggleTheme: () => void;
+}>({
+  mode: 'light',
+  toggleTheme: () => {},
+});
+
+export const useTheme = () => useContext(ThemeContext);
+
+// Theme provider component
+function ThemeProviderWrapper({ children }: { children: ReactNode }) {
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    // Load theme preference from localStorage
+    const savedMode = localStorage.getItem('theme-mode') as 'light' | 'dark';
+    if (savedMode && (savedMode === 'light' || savedMode === 'dark')) {
+      setMode(savedMode);
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setMode(prefersDark ? 'dark' : 'light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem('theme-mode', newMode);
+  };
+
+  // Create theme based on current mode
+  const theme = createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: '#1976d2',
+        light: '#42a5f5',
+        dark: '#1565c0',
+        contrastText: '#ffffff',
+      },
+      secondary: {
+        main: '#dc004e',
+        light: '#ff5983',
+        dark: '#9a0036',
+        contrastText: '#ffffff',
+      },
+      background: {
+        default: mode === 'light' ? '#fafafa' : '#121212',
+        paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      },
+      text: {
+        primary: mode === 'light' ? 'rgba(0, 0, 0, 0.87)' : '#ffffff',
+        secondary: mode === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.7)',
+      },
+    },
+    typography: {
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      h1: {
+        fontWeight: 700,
+      },
+      h2: {
+        fontWeight: 600,
+      },
+      h3: {
+        fontWeight: 600,
+      },
+      h4: {
+        fontWeight: 600,
+      },
+      h5: {
+        fontWeight: 600,
+      },
+      h6: {
+        fontWeight: 600,
+      },
+    },
+    shape: {
+      borderRadius: 8,
+    },
+  });
+
+  return (
+    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </ThemeContext.Provider>
+  );
+}
 
 /**
  * ThemeRegistry component for MUI theme integration
@@ -26,52 +128,11 @@ import { useState } from 'react';
  * @param children - React components to wrap with theme provider
  */
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
-  const [{ cache, flush }] = useState(() => {
-    const cache = createCache({ key: 'mui' });
-    cache.compat = true;
-    const prevInsert = cache.insert;
-    let inserted: string[] = [];
-    cache.insert = (...args) => {
-      const serialized = args[1];
-      if (cache.inserted[serialized.name] === undefined) {
-        inserted.push(serialized.name);
-      }
-      return prevInsert(...args);
-    };
-    const flush = () => {
-      const prevInserted = inserted;
-      inserted = [];
-      return prevInserted;
-    };
-    return { cache, flush };
-  });
-
-  useServerInsertedHTML(() => {
-    const names = flush();
-    if (names.length === 0) {
-      return null;
-    }
-    let styles = '';
-    for (const name of names) {
-      styles += cache.inserted[name];
-    }
-    return (
-      <style
-        key={cache.key}
-        data-emotion={`${cache.key} ${names.join(' ')}`}
-        dangerouslySetInnerHTML={{
-          __html: styles,
-        }}
-      />
-    );
-  });
-
   return (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <AppRouterCacheProvider>
+      <ThemeProviderWrapper>
         {children}
-      </ThemeProvider>
-    </CacheProvider>
+      </ThemeProviderWrapper>
+    </AppRouterCacheProvider>
   );
 } 
