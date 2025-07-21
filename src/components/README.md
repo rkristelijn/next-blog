@@ -88,6 +88,56 @@ Catches and handles React errors gracefully with a user-friendly fallback UI.
 </ErrorBoundary>
 ```
 
+### Header
+**File**: `Header.tsx`
+
+A reusable header component for consistent navigation across the blog.
+
+**Props**:
+- `title?: string` - Optional title to display in the header (default: "Next.js Blog")
+- `showBlogPostsButton?: boolean` - Whether to show the blog posts button (default: true)
+
+**Usage**:
+```tsx
+<Header title="My Blog" showBlogPostsButton={true} />
+```
+
+### Footer
+**File**: `Footer.tsx`
+
+A reusable footer component with external links and consistent styling.
+
+**Props**: None (static footer)
+
+**Usage**:
+```tsx
+<Footer />
+```
+
+### Hero
+**File**: `Hero.tsx`
+
+Displays the main hero section with welcome message and call-to-action buttons.
+
+**Props**: None (static hero content)
+
+**Usage**:
+```tsx
+<Hero />
+```
+
+### Features
+**File**: `Features.tsx`
+
+Displays feature cards highlighting the blog's key capabilities.
+
+**Props**: None (static feature content)
+
+**Usage**:
+```tsx
+<Features />
+```
+
 ## Best Practices
 
 1. **Single Responsibility**: Each component has one clear purpose
