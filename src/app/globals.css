@@ -1,0 +1,68 @@
+/* Global styles for MUI CSS theme variables */
+
+/* Initial theme setup - prevents flash of unstyled content */
+html.mui-light {
+  color-scheme: light;
+}
+
+html.mui-dark {
+  color-scheme: dark;
+}
+
+/* Set initial background colors to prevent flash */
+body {
+  background-color: #fafafa; /* Light theme default */
+  transition: background-color 0.2s ease;
+}
+
+html.mui-dark body {
+  background-color: #121212; /* Dark theme default */
+}
+
+/* Ensure smooth transitions for MUI CSS variables */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Prevent layout shift during theme loading */
+html {
+  visibility: visible;
+}
+
+/* Ensure proper font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* MUI CSS Variables fallbacks */
+:root {
+  --mui-palette-primary-main: #1976d2;
+  --mui-palette-primary-light: #42a5f5;
+  --mui-palette-primary-dark: #1565c0;
+  --mui-palette-primary-contrastText: #ffffff;
+  --mui-palette-secondary-main: #dc004e;
+  --mui-palette-secondary-light: #ff5983;
+  --mui-palette-secondary-dark: #9a0036;
+  --mui-palette-secondary-contrastText: #ffffff;
+  --mui-palette-background-default: #fafafa;
+  --mui-palette-background-paper: #ffffff;
+  --mui-palette-text-primary: rgba(0, 0, 0, 0.87);
+  --mui-palette-text-secondary: rgba(0, 0, 0, 0.6);
+}
+
+html.mui-dark {
+  --mui-palette-primary-main: #90caf9;
+  --mui-palette-primary-light: #e3f2fd;
+  --mui-palette-primary-dark: #42a5f5;
+  --mui-palette-primary-contrastText: #000000;
+  --mui-palette-secondary-main: #f48fb1;
+  --mui-palette-secondary-light: #f8bbd9;
+  --mui-palette-secondary-dark: #ec407a;
+  --mui-palette-secondary-contrastText: #000000;
+  --mui-palette-background-default: #121212;
+  --mui-palette-background-paper: #1e1e1e;
+  --mui-palette-text-primary: #ffffff;
+  --mui-palette-text-secondary: rgba(255, 255, 255, 0.7);
+} 
