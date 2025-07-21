@@ -6,68 +6,47 @@
  * - Add caching and optimization
  * - Implement proper error handling
  * - Test data operations independently
+ * 
+ * Uses MDX files from src/content/posts/ for blog content.
+ * 
+ * MDX files should have the following frontmatter:
+ * ---
+ * title: "Post Title"
+ * date: "YYYY-MM-DD"
+ * excerpt: "Brief description"
+ * ---
+ * 
+ * The content follows the frontmatter in standard markdown format.
  */
 
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
 import type { Post } from '@/types';
 
-/**
- * Sample blog posts data
- * In a real application, this would come from a CMS, database, or file system
- */
-const POSTS_DATA: Record<string, Post> = {
-  'hello-world': {
-    id: 'hello-world',
-    title: 'Hello World',
-    content: `# Hello World
-
-Welcome to my first blog post! This is a simple introduction to my blog.
-
-## What to expect
-
-I'll be writing about:
-- Web development
-- Next.js tips and tricks
-- Personal projects
-- And much more!
-
-Stay tuned for more content!`,
-    date: '2024-01-15',
-    excerpt: 'Welcome to my first blog post!',
-    slug: 'hello-world'
-  },
-  'getting-started': {
-    id: 'getting-started',
-    title: 'Getting Started with Next.js',
-    content: `# Getting Started with Next.js
-
-Next.js is a powerful React framework that makes building full-stack web applications simple and efficient.
-
-## Why Next.js?
-
-- **Server-side rendering** for better SEO
-- **File-based routing** for intuitive navigation
-- **API routes** for backend functionality
-- **Built-in optimizations** for performance
-
-## Getting Started
-
-1. Create a new project: \`npx create-next-app@latest\`
-2. Navigate to your project: \`cd your-project\`
-3. Start the development server: \`npm run dev\`
-
-That's it! You're ready to build amazing web applications.`,
-    date: '2024-01-20',
-    excerpt: 'Learn how to build modern web applications with Next.js.',
-    slug: 'getting-started'
-  }
-};
+const POSTS_DIRECTORY = path.join(process.cwd(), 'src/content/posts');
 
 /**
- * Get all blog posts
- * @returns Array of all posts
+ * Get all blog posts from MDX files
+ * @returns Array of all posts with metadata
  */
 export function getAllPosts(): Post[] {
-  return Object.values(POSTS_DATA);
+  try {
+    // Get all MDX files from the posts directory
+    const fileNames = fs.readdirSync(POSTS_DIRECTORY);
+    const mdxFiles = fileNames.filter(fileName => fileName.endsWith('.mdx'));
+    
+    const posts = mdxFiles.map(fileName => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      return getPostBySlug(slug);
+    }).filter((post): post is Post => post !== undefined);
+    
+    // Sort posts by date (newest first)
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+    return [];
+  }
 }
 
 /**
@@ -76,7 +55,38 @@ export function getAllPosts(): Post[] {
  * @returns The post if found, undefined otherwise
  */
 export function getPostBySlug(slug: string): Post | undefined {
-  return POSTS_DATA[slug];
+  try {
+    const fullPath = path.join(POSTS_DIRECTORY, `${slug}.mdx`);
+    
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      return undefined;
+    }
+    
+    // Read the MDX file
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    
+    // Parse the frontmatter and content
+    const { data, content } = matter(fileContents);
+    
+    // Validate required fields
+    if (!data.title || !data.date || !data.excerpt) {
+      console.warn(`Missing required frontmatter fields in ${slug}.mdx`);
+      return undefined;
+    }
+    
+    return {
+      id: slug,
+      slug,
+      title: data.title,
+      date: data.date,
+      excerpt: data.excerpt,
+      content
+    };
+  } catch (error) {
+    console.error(`Error reading post ${slug}:`, error);
+    return undefined;
+  }
 }
 
 /**
@@ -84,7 +94,15 @@ export function getPostBySlug(slug: string): Post | undefined {
  * @returns Array of all post slugs
  */
 export function getAllPostSlugs(): string[] {
-  return Object.keys(POSTS_DATA);
+  try {
+    const fileNames = fs.readdirSync(POSTS_DIRECTORY);
+    return fileNames
+      .filter(fileName => fileName.endsWith('.mdx'))
+      .map(fileName => fileName.replace(/\.mdx$/, ''));
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+    return [];
+  }
 }
 
 /**
@@ -93,5 +111,6 @@ export function getAllPostSlugs(): string[] {
  * @returns True if the post exists, false otherwise
  */
 export function postExists(slug: string): boolean {
-  return slug in POSTS_DATA;
+  const fullPath = path.join(POSTS_DIRECTORY, `${slug}.mdx`);
+  return fs.existsSync(fullPath);
 } 

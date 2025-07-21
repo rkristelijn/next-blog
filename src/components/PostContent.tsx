@@ -4,6 +4,8 @@
  * This component handles the rendering of post content with proper styling
  * for markdown elements. It encapsulates the markdown rendering logic
  * and provides consistent styling across all blog posts.
+ * 
+ * Supports both regular markdown and MDX content from frontmatter.
  */
 
 import ReactMarkdown from 'react-markdown';

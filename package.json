@@ -23,6 +23,7 @@
 		"@mui/material-nextjs": "^7.2.0",
 		"@next/mdx": "^15.4.2",
 		"@opennextjs/cloudflare": "^1.5.2",
+		"gray-matter": "^4.0.3",
 		"next": "15.3.5",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
