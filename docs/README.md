@@ -1,0 +1,5 @@
+- [Set up from scratch](./setup.md)
+- Architecture guide
+- API reference
+- Usage guide
+- Developer guide

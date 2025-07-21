@@ -1,0 +1,10 @@
+# AI Rules for this project
+
+- Always use the latest MUI syntax, in this case v7, specifically for the <Grid size={{xs:1, md:2}}> component, see https://mui.com/material-ui/react-grid/
+- Only use MUI, no HTML unless it is needed for e.g. HTML5 landmarks, take inspiration from MUI Toolpad for the set up
+- Site needs to be fully WCAG2.2 AA compatible for accessibility
+- Site needs to be fully responsive
+- Make use of the MUI theme only, no overrides unless absolutely necessary
+- Keep the code as simple as possible, no unnecessary complexity
+- use the vanilla installation of https://opennext.js.org/cloudflare/get-started
+- use the vanilla set up of https://nextjs.org/docs/app/guides/mdx

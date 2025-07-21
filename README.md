@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next-blog
 
-## Getting Started
+This is a simple blog application using Next.js and Markdown files for content. It's designed to be a starting point for building your own blog, where changing (creating, updating, deleting) blog posts will trigger a new build. 
 
-First, run the development server:
+NextJS' router will take care of navigating to the right page containing the blog post, reading the respective markdown file, and rendering the content. 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Detailed documentation can be found in the [./docs](docs) folder.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+https://next-blog.rkristelijn.workers.dev/
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Prerequisites
 
-## Learn More
+Node
 
-To learn more about Next.js, take a look at the following resources:
+## Getting started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm start` - start the development server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testing
 
-## Deploy on Vercel
+- `npm t` - run the tests
+- `npm run lint` - checks for the proper markdown formatting
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploying
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- merge your changes to the `main` branch and push to GitHub
+- create a new GitHub release and select the latest release tag
+- go to the GitHub Actions tab and select the workflow named `deploy`
+
+## Resources
+
+- https://github.com/zanicool/republicofzani
+- https://opennext.js.org/cloudflare/get-started
+- https://nextjs.org/docs/app/guides/mdx
