@@ -9,7 +9,6 @@
 import type { Post } from '@/types';
 
 // Import the static data (this will be bundled at build time)
-// @ts-expect-error - JSON import will be available after build
 import postsData from '@/data/posts.json';
 
 /**
