@@ -1,81 +1,69 @@
 # Next.js Blog Documentation
 
-Welcome to the Next.js Blog documentation. This project demonstrates modern web development practices using Next.js 15, Material-UI, and Cloudflare Workers.
+This documentation covers the architecture, setup, and development guidelines for the Next.js blog application.
 
-## 📚 Documentation Index
+## Table of Contents
 
-### Getting Started
-- [Set up from scratch](./setup.md) - Complete setup guide for new projects
-- [Cloudflare deployment setup](./cloudflare.md) - Deploy to Cloudflare Workers
+- [Architecture Overview](architecture.md)
+- [Platform Rules](platform-rules.md)
+- [Architecture Rules](architecture-rules.md)
+- [Setup Guide](setup.md)
+- [Cloudflare Deployment](cloudflare.md)
+- [Theme System](theme-system.md)
 
-### Development Guidelines
-- [Coding principles and rules](./architecture-rules.md) - Core development principles (RTFM, C4C, KISS, YAGNI, HIPI, NBI)
-- [Platform-specific rules](./platform-rules.md) - MUI, React, TypeScript, and performance guidelines
+## Type Management
 
-### Architecture & Design
-- [Architecture overview](./architecture.md) - System design and C4 diagrams
-- [Component architecture](./components/README.md) - Component design patterns
+### Single Source of Truth Principle
 
-### User Guides
-- [User guide](./user-guide.md) - How to use the blog features
-- [Developer guide](./developer-guide.md) - Contributing and development workflow
+**Problem**: Having multiple type definitions for the same entity violates the DRY (Don't Repeat Yourself) principle and creates maintenance nightmares.
 
-### Technical Reference
-- [API reference](./api-reference.md) - Component and function documentation
-- [Theme system](./theme-system.md) - Dark/light theme implementation
-- [Performance optimization](./performance.md) - Optimization strategies
+**Solution**: All TypeScript interfaces are defined in `src/types/index.ts` and imported where needed.
 
-## 🚀 Quick Start
+#### ✅ **Correct Approach**
+```typescript
+// src/types/index.ts - Single source of truth
+export interface Post {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  slug: string;
+  content: string;
+}
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/rkristelijn/next-blog.git
-   cd next-blog
-   ```
+// Other files import from the central location
+import type { Post } from '@/types';
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+#### ❌ **Avoid This**
+```typescript
+// Don't define Post interface in multiple files
+// src/lib/posts.ts
+interface Post { /* ... */ }
 
-3. **Run development server**
-   ```bash
-   npm run dev
-   ```
+// src/components/PostCard.tsx  
+interface Post { /* ... */ }
 
-4. **Build and deploy**
-   ```bash
-   npm run deploy
-   ```
+// src/content/posts/some-post.mdx
+interface Post { /* ... */ }
+```
 
-## 🎨 Features
+### Type Consistency
 
-- **Modern Stack**: Next.js 15, Material-UI 7, TypeScript
-- **Dark/Light Theme**: Automatic theme switching with persistence
-- **MDX Support**: Write blog posts in Markdown with JSX
-- **Cloudflare Deployment**: Global CDN with edge computing
-- **Responsive Design**: Mobile-first approach
-- **Accessibility**: WCAG 2.2 AA compliant
+- **All Post interfaces** should reference `src/types/index.ts`
+- **Blog posts** should include comments pointing to the actual type definition
+- **Documentation** should reference the central type file
+- **No duplicate definitions** across the codebase
 
-## 📖 Blog Posts
+### Benefits
 
-The project includes comprehensive blog posts covering:
-- [Creating Next.js Project](./posts/01-creating-nextjs-project.md)
-- [GitHub Actions Deployment](./posts/02-github-actions-deployment.md)
-- [MDX Functionality](./posts/03-adding-mdx-functionality.md)
-- [Material-UI Integration](./posts/04-integrating-material-ui.md)
-- [Code Quality Optimization](./posts/05-optimizing-code-quality.md)
-- [AI-Assisted Development](./posts/06-ai-assisted-development.md)
-- [Next Steps](./posts/07-next-steps.md)
-- [Architecture Overview](./posts/08-architecture-overview.md)
-- [User Guide](./posts/09-user-guide.md)
-- [Developer Guide](./posts/10-developer-guide.md)
-- [Cloudflare Deployment Fix](./posts/11-fixing-cloudflare-deployment.md)
+1. **Maintainability**: Change once, updates everywhere
+2. **Consistency**: All components use the same type structure
+3. **Type Safety**: TypeScript catches mismatches automatically
+4. **Documentation**: Clear reference for developers
+5. **Refactoring**: Easy to update types across the entire application
 
-## 🤝 Contributing
+## Development Guidelines
 
-Please read our [contributing guidelines](./contributing.md) before submitting pull requests.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+Follow the principles outlined in [architecture-rules.md](architecture-rules.md) and [platform-rules.md](platform-rules.md) for consistent, maintainable code.

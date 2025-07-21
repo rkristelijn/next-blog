@@ -70,7 +70,7 @@ export function getPostBySlug(slug: string): Post | undefined {
     const { data, content } = matter(fileContents);
     
     // Validate required fields
-    if (!data.title || !data.date || !data.excerpt) {
+    if (!data.title || !data.date || !data.excerpt || !data.author) {
       console.warn(`Missing required frontmatter fields in ${slug}.mdx`);
       return undefined;
     }
@@ -80,6 +80,7 @@ export function getPostBySlug(slug: string): Post | undefined {
       slug,
       title: data.title,
       date: data.date,
+      author: data.author,
       excerpt: data.excerpt,
       content
     };

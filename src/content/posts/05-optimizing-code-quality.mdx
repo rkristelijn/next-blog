@@ -67,11 +67,13 @@ Enhance `src/types/index.ts` with comprehensive type safety:
  * all types are named to clearly indicate their purpose.
  */
 
+// See src/types/index.ts for the actual type definitions
 export interface Post {
   id: string;
   title: string;
   excerpt: string;
   date: string;
+  author: string;  // Added in later updates
   slug: string;
   content: string;
 }

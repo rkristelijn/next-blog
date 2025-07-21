@@ -73,11 +73,13 @@ This structure keeps your content separate from your application code.
 Create TypeScript interfaces for your blog posts in `src/types/index.ts`:
 
 ```typescript
+// See src/types/index.ts for the actual Post interface
 export interface Post {
   id: string;
   title: string;
   excerpt: string;
   date: string;
+  author: string;  // Added in later updates
   slug: string;
   content: string;
 }

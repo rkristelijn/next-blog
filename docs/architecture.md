@@ -359,11 +359,13 @@ next-blog/
 ```typescript
 // Data flow: MDX Files → Gray Matter → TypeScript Interfaces → Components
 
+// See src/types/index.ts for the actual Post interface
 interface Post {
   id: string;
   title: string;
   excerpt: string;
   date: string;
+  author: string;  // Added in later updates
   slug: string;
   content: string;
 }
