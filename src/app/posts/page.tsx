@@ -1,52 +1,20 @@
-import Link from 'next/link';
-import { 
-  Container, 
-  Typography, 
-  Card, 
-  CardContent, 
-  Box,
-  AppBar,
-  Toolbar,
-  Button
-} from '@mui/material';
-import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { Container, Typography, Box } from '@mui/material';
+import Navigation from '@/components/Navigation';
+import PostCard from '@/components/PostCard';
+import { getAllPosts } from '@/lib/posts';
 
-// This would typically come from a CMS or file system
-const posts = [
-  {
-    id: 'hello-world',
-    title: 'Hello World',
-    excerpt: 'Welcome to my first blog post!',
-    date: '2024-01-15',
-    slug: 'hello-world'
-  },
-  {
-    id: 'getting-started',
-    title: 'Getting Started with Next.js',
-    excerpt: 'Learn how to build modern web applications with Next.js.',
-    date: '2024-01-20',
-    slug: 'getting-started'
-  }
-];
-
+/**
+ * Posts listing page - displays all available blog posts
+ * 
+ * This page follows the C4C principle by using clear, reusable components
+ * and the HIPI principle by hiding implementation details behind clean interfaces.
+ */
 export default function PostsPage() {
+  const posts = getAllPosts();
+
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="static" color="default" elevation={1}>
-        <Toolbar>
-          <Button 
-            color="inherit" 
-            component={Link} 
-            href="/"
-            startIcon={<ArrowBackIcon />}
-          >
-            Home
-          </Button>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 2 }}>
-            Blog Posts
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Navigation title="Blog Posts" showHome={true} showBack={false} />
 
       <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
         <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 4 }}>
@@ -55,36 +23,7 @@ export default function PostsPage() {
         
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {posts.map((post) => (
-            <Card key={post.id} sx={{ 
-              transition: 'box-shadow 0.2s ease',
-              '&:hover': {
-                boxShadow: 4
-              }
-            }}>
-              <CardContent>
-                <Typography variant="h5" component="h2" gutterBottom>
-                  <Box
-                    component={Link}
-                    href={`/posts/${post.slug}`}
-                    sx={{ 
-                      color: 'inherit', 
-                      textDecoration: 'none',
-                      '&:hover': {
-                        color: 'primary.main'
-                      }
-                    }}
-                  >
-                    {post.title}
-                  </Box>
-                </Typography>
-                <Typography color="text.secondary" paragraph>
-                  {post.excerpt}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {post.date}
-                </Typography>
-              </CardContent>
-            </Card>
+            <PostCard key={post.id} post={post} />
           ))}
         </Box>
       </Container>

@@ -7,8 +7,6 @@ import {
   Box, 
   Card, 
   CardContent, 
-  AppBar,
-  Toolbar,
   Stack
 } from '@mui/material';
 import { 
@@ -17,20 +15,12 @@ import {
   GitHub as GitHubIcon,
   Language as LanguageIcon
 } from '@mui/icons-material';
+import Navigation from '@/components/Navigation';
 
 export default function Home() {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="static" color="default" elevation={1}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Next.js Blog
-          </Typography>
-          <Button color="inherit" component={Link} href="/posts">
-            Blog Posts
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Navigation title="Next.js Blog" showHome={false} showBack={false} showBlogPosts={true} />
 
       <Container maxWidth="lg" sx={{ flex: 1, py: 8 }}>
         <Box sx={{ textAlign: 'center', mb: 8 }}>

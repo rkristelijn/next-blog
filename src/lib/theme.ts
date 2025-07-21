@@ -1,3 +1,11 @@
+/**
+ * MUI theme configuration
+ * 
+ * This file defines the Material-UI theme for the application.
+ * It follows the KISS principle by keeping the theme simple and
+ * focused on the essential styling needs.
+ */
+
 'use client';
 
 import { createTheme } from '@mui/material/styles';

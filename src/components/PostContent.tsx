@@ -1,0 +1,55 @@
+/**
+ * PostContent component - renders blog post content with markdown support
+ * 
+ * This component handles the rendering of post content with proper styling
+ * for markdown elements. It encapsulates the markdown rendering logic
+ * and provides consistent styling across all blog posts.
+ */
+
+import ReactMarkdown from 'react-markdown';
+import { Typography, Box } from '@mui/material';
+import type { PostContentProps } from '@/types';
+
+/**
+ * PostContent component for rendering blog post content
+ * 
+ * @param post - The post containing the content to render
+ */
+export default function PostContent({ post }: PostContentProps) {
+  return (
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h3" component="h1" gutterBottom>
+        {post.title}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        {post.date}
+      </Typography>
+      
+      <Box sx={{ 
+        '& h1': { fontSize: '2rem', fontWeight: 700, mb: 2, mt: 3 },
+        '& h2': { fontSize: '1.75rem', fontWeight: 600, mb: 1.5, mt: 2.5 },
+        '& h3': { fontSize: '1.5rem', fontWeight: 600, mb: 1, mt: 2 },
+        '& p': { mb: 1.5, lineHeight: 1.7 },
+        '& ul, & ol': { mb: 1.5, pl: 3 },
+        '& li': { mb: 0.5 },
+        '& strong': { fontWeight: 600 },
+        '& code': { 
+          backgroundColor: '#f5f5f5', 
+          padding: '0.125rem 0.25rem', 
+          borderRadius: '0.25rem',
+          fontFamily: 'monospace',
+          fontSize: '0.875rem'
+        },
+        '& pre': {
+          backgroundColor: '#f5f5f5',
+          padding: '1rem',
+          borderRadius: '0.5rem',
+          overflow: 'auto',
+          mb: 1.5
+        }
+      }}>
+        <ReactMarkdown>{post.content}</ReactMarkdown>
+      </Box>
+    </Box>
+  );
+} 

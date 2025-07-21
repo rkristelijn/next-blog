@@ -1,3 +1,15 @@
+/**
+ * ThemeRegistry - MUI theme provider for Next.js
+ * 
+ * This component handles emotion cache creation and server-side rendering
+ * of MUI styles. It's required for proper MUI integration with Next.js
+ * and follows the HIPI principle by hiding complex emotion setup behind
+ * a simple interface.
+ * 
+ * Implementation based on emotion-js recommendations:
+ * https://github.com/emotion-js/emotion/issues/2928#issuecomment-1319747902
+ */
+
 'use client';
 
 import createCache from '@emotion/cache';
@@ -8,8 +20,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../lib/theme';
 import { useState } from 'react';
 
-// This implementation is from emotion-js
-// https://github.com/emotion-js/emotion/issues/2928#issuecomment-1319747902
+/**
+ * ThemeRegistry component for MUI theme integration
+ * 
+ * @param children - React components to wrap with theme provider
+ */
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   const [{ cache, flush }] = useState(() => {
     const cache = createCache({ key: 'mui' });

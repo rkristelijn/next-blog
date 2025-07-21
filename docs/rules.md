@@ -1,8 +1,4 @@
-# Level 0 - Bare Minimum
-
-By remi.kristelijn  
-Draft  
-4 min read
+# Bare Minimum rules
 
 The bare minimum principles represent ideas that help any developer interpret designs and code in simple perspectives and approaches. The bare minimums help us keep the eye on the ball.
 
