@@ -1,0 +1,341 @@
+---
+title: "Fixing Dark Theme Implementation in Next.js with Material-UI"
+date: "2024-12-19"
+excerpt: "A deep dive into implementing proper dark theme support in a Next.js blog with Material-UI, covering common pitfalls, theme switching, and code block styling."
+---
+
+# Fixing Dark Theme Implementation in Next.js with Material-UI
+
+When building a modern web application, dark theme support is no longer optional—it's expected. Users spend significant time on screens, and dark themes reduce eye strain and provide a better experience in low-light environments. However, implementing a proper dark theme in Next.js with Material-UI can be tricky, especially when dealing with hardcoded colors and theme switching.
+
+In this post, I'll walk through the challenges we faced and the solutions we implemented to create a robust dark theme system for our Next.js blog.
+
+## The Problem: Broken Theme Switching
+
+Our initial implementation had several issues:
+
+1. **Theme toggle not working** - The sun/moon icon would change, but the actual theme wouldn't switch
+2. **Hardcoded colors** - Some text remained black even in dark mode
+3. **Code blocks with wrong colors** - Light backgrounds in dark mode made code unreadable
+4. **Footer inconsistency** - Hardcoded background colors that didn't adapt
+
+## Understanding the Root Cause
+
+The main issue was that we were trying to use MUI v7's experimental CSS variables approach, but our setup wasn't compatible. The `Experimental_CssVarsProvider` was deprecated, and we needed a different approach.
+
+### The Wrong Approach (What We Started With)
+
+```typescript
+// ❌ This doesn't work properly with MUI v7
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles';
+
+export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
+  return (
+    <CssVarsProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </CssVarsProvider>
+  );
+}
+```
+
+## The Solution: Custom Theme Context
+
+We implemented a custom theme context that provides full control over theme switching and ensures all components use theme-aware colors.
+
+### 1. Creating the Theme Context
+
+```typescript
+// src/components/ThemeRegistry.tsx
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+// Theme context for managing theme state
+const ThemeContext = createContext<{
+  mode: 'light' | 'dark';
+  toggleTheme: () => void;
+}>({
+  mode: 'light',
+  toggleTheme: () => {},
+});
+
+export const useTheme = () => useContext(ThemeContext);
+```
+
+### 2. Theme Provider with Dynamic Theme Creation
+
+```typescript
+function ThemeProviderWrapper({ children }: { children: ReactNode }) {
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    // Load theme preference from localStorage
+    const savedMode = localStorage.getItem('theme-mode') as 'light' | 'dark';
+    if (savedMode && (savedMode === 'light' || savedMode === 'dark')) {
+      setMode(savedMode);
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setMode(prefersDark ? 'dark' : 'light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem('theme-mode', newMode);
+  };
+
+  // Create theme based on current mode
+  const theme = createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: '#1976d2',
+        light: '#42a5f5',
+        dark: '#1565c0',
+        contrastText: '#ffffff',
+      },
+      secondary: {
+        main: '#dc004e',
+        light: '#ff5983',
+        dark: '#9a0036',
+        contrastText: '#ffffff',
+      },
+      background: {
+        default: mode === 'light' ? '#fafafa' : '#121212',
+        paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+      },
+      text: {
+        primary: mode === 'light' ? 'rgba(0, 0, 0, 0.87)' : '#ffffff',
+        secondary: mode === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.7)',
+      },
+    },
+    // ... typography and shape configurations
+  });
+
+  return (
+    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </ThemeContext.Provider>
+  );
+}
+```
+
+## Fixing Hardcoded Colors
+
+### The Problem: Footer Background
+
+```typescript
+// ❌ Hardcoded color that doesn't adapt
+<Box component="footer" sx={{ bgcolor: 'grey.100', py: 4 }}>
+```
+
+### The Solution: Theme-Aware Colors
+
+```typescript
+// ✅ Theme-aware color that adapts
+<Box component="footer" sx={{ bgcolor: 'background.paper', py: 4 }}>
+```
+
+### The Problem: Code Block Styling
+
+```typescript
+// ❌ Hardcoded light background
+'& code': { 
+  backgroundColor: '#f5f5f5', 
+  padding: '0.125rem 0.25rem', 
+  borderRadius: '0.25rem',
+  fontFamily: 'monospace',
+  fontSize: '0.875rem'
+},
+'& pre': {
+  backgroundColor: '#f5f5f5',
+  padding: '1rem',
+  borderRadius: '0.5rem',
+  overflow: 'auto',
+  mb: 1.5
+}
+```
+
+### The Solution: Theme-Aware Code Blocks
+
+```typescript
+// ✅ Theme-aware code styling
+'& code': { 
+  backgroundColor: 'action.hover', 
+  color: 'text.primary',
+  padding: '0.125rem 0.25rem', 
+  borderRadius: '0.25rem',
+  fontFamily: 'monospace',
+  fontSize: '0.875rem'
+},
+'& pre': {
+  backgroundColor: 'background.paper',
+  border: 1,
+  borderColor: 'divider',
+  padding: '1rem',
+  borderRadius: '0.5rem',
+  overflow: 'auto',
+  mb: 1.5,
+  '& code': {
+    backgroundColor: 'transparent',
+    padding: 0,
+    borderRadius: 0,
+    color: 'text.primary'
+  }
+}
+```
+
+## Updating the Theme Toggle
+
+### Before: Using useColorScheme (Not Working)
+
+```typescript
+// ❌ This wasn't working properly
+import { useColorScheme } from '@mui/material';
+
+export default function ThemeToggle() {
+  const { mode, setMode } = useColorScheme();
+  // ... complex logic that wasn't working
+}
+```
+
+### After: Using Custom Theme Context
+
+```typescript
+// ✅ Simple and reliable
+import { useTheme } from './ThemeRegistry';
+
+export default function ThemeToggle() {
+  const { mode, toggleTheme } = useTheme();
+
+  return (
+    <Tooltip title={`Switch to ${mode === 'light' ? 'dark' : 'light'} mode`}>
+      <IconButton onClick={toggleTheme} color="inherit">
+        {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+      </IconButton>
+    </Tooltip>
+  );
+}
+```
+
+## Key Principles for Theme Implementation
+
+### 1. Never Use Hardcoded Colors
+
+Always use MUI's theme tokens instead of hardcoded colors:
+
+- ✅ `color: 'text.primary'` instead of `color: '#000000'`
+- ✅ `backgroundColor: 'background.paper'` instead of `backgroundColor: '#ffffff'`
+- ✅ `borderColor: 'divider'` instead of `borderColor: '#e0e0e0'`
+
+### 2. Use Semantic Color Names
+
+MUI provides semantic color names that automatically adapt:
+
+- `text.primary` - Main text color
+- `text.secondary` - Secondary text color
+- `background.default` - Page background
+- `background.paper` - Card/component background
+- `action.hover` - Hover state background
+- `divider` - Border/divider color
+
+### 3. Test Both Themes
+
+Always test your components in both light and dark modes to ensure:
+
+- Proper contrast ratios
+- Readable text
+- Consistent visual hierarchy
+- No hardcoded colors
+
+## Benefits of Proper Theme Implementation
+
+### 1. Better User Experience
+
+- Reduces eye strain in low-light environments
+- Respects user preferences
+- Provides consistent visual experience
+
+### 2. Accessibility
+
+- Proper contrast ratios in both themes
+- Screen reader compatibility
+- WCAG compliance
+
+### 3. Maintainability
+
+- Centralized theme management
+- Easy to modify colors globally
+- Consistent design system
+
+## Common Pitfalls to Avoid
+
+### 1. Mixing Theme Approaches
+
+Don't mix different theme approaches in the same application. Stick to one method consistently.
+
+### 2. Forgetting localStorage
+
+Always persist user theme preferences to localStorage for better UX.
+
+### 3. Ignoring System Preferences
+
+Respect the user's system theme preference as the default.
+
+### 4. Hardcoded Colors in Components
+
+Never use hardcoded colors in components. Always use theme tokens.
+
+## Testing Your Theme Implementation
+
+### Manual Testing Checklist
+
+- [ ] Theme toggle works correctly
+- [ ] All text is readable in both themes
+- [ ] Code blocks have proper contrast
+- [ ] Buttons and interactive elements are visible
+- [ ] Theme preference persists on page reload
+- [ ] System preference is respected on first visit
+
+### Automated Testing
+
+Consider adding theme tests to your test suite:
+
+```typescript
+test('theme toggle changes mode', () => {
+  render(<ThemeToggle />);
+  const toggle = screen.getByRole('button');
+  fireEvent.click(toggle);
+  expect(localStorage.getItem('theme-mode')).toBe('dark');
+});
+```
+
+## Conclusion
+
+Implementing a proper dark theme in Next.js with Material-UI requires careful attention to detail and avoiding common pitfalls. By using a custom theme context, theme-aware colors, and proper testing, we created a robust theme system that provides an excellent user experience.
+
+The key takeaways are:
+
+1. **Use theme tokens instead of hardcoded colors**
+2. **Implement proper theme persistence**
+3. **Test thoroughly in both themes**
+4. **Respect user preferences**
+5. **Keep the implementation simple and maintainable**
+
+With these principles in place, your application will provide a consistent and accessible experience across all themes and user preferences.
+
+## Next Steps
+
+Now that we have a solid theme foundation, we could enhance it further with:
+
+- **Theme-specific typography** - Different font weights or sizes for each theme
+- **Custom color palettes** - Brand-specific colors that work in both themes
+- **Animation transitions** - Smooth theme switching animations
+- **Advanced theming** - Multiple theme variants beyond just light/dark
+
+The foundation we've built makes these enhancements much easier to implement in the future. 
