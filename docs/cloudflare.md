@@ -39,9 +39,15 @@ git push -u origin main
 4. Configure the token with the following permissions:
 
 #### Token Permissions:
-- **Account**: `Cloudflare Workers` - `Edit`
+- **Account**: `Cloudflare Pages` - `Edit` (for deployment)
+- **Account**: `Workers Scripts` - `Edit` (for Workers deployment)
 - **Zone**: `Zone` - `Edit` (if you want to use a custom domain)
 - **Zone**: `Zone Settings` - `Edit` (if you want to use a custom domain)
+
+**Note**: If you don't see "Workers Scripts", look for these alternatives:
+- `Workers Builds Configuration` - `Edit`
+- `Workers KV Storage` - `Edit` (if using KV)
+- `Workers Observability` - `Edit`
 
 #### Account Resources:
 - Include: `All accounts`
@@ -129,6 +135,7 @@ The exact URL will be shown in the GitHub Actions logs.
 #### 1. "Permission denied" error
 - Check that your Cloudflare API token has the correct permissions
 - Verify your Account ID is correct
+- Make sure you have `Workers Scripts` or `Cloudflare Pages` permissions
 
 #### 2. Build fails
 - Check the GitHub Actions logs for specific error messages
