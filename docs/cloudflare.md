@@ -31,7 +31,21 @@ git push -u origin main
 
 ## Step 2: Set up Cloudflare API Token
 
-### 2.1 Create API Token
+### 2.1 Create API Token (Recommended: Use Template)
+
+**Option A: Use the "Edit Cloudflare Workers" Template (Recommended)**
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens)
+2. Scroll down to find **"Edit Cloudflare Workers"** in the API token templates list
+3. Click the blue **"Use template"** button next to it
+4. Give your token a name (e.g., "GitHub Actions Deployment")
+5. Click **"Continue to summary"** and then **"Create Token"**
+
+This template automatically includes all the necessary permissions for deploying to Cloudflare Workers.
+
+**Option B: Create Custom Token (Alternative)**
+
+If you prefer to create a custom token, follow these steps:
 
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens)
 2. Click "Create Token"
