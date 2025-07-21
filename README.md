@@ -34,3 +34,4 @@ Node
 - https://github.com/zanicool/republicofzani
 - https://opennext.js.org/cloudflare/get-started
 - https://nextjs.org/docs/app/guides/mdx
+- https://mui.com/material-ui/integrations/nextjs/

@@ -1,106 +1,154 @@
 import Image from "next/image";
 import Link from "next/link";
-import styles from "./page.module.css";
+import { 
+  Container, 
+  Typography, 
+  Button, 
+  Box, 
+  Card, 
+  CardContent, 
+  AppBar,
+  Toolbar,
+  Stack
+} from '@mui/material';
+import { 
+  Article as ArticleIcon,
+  School as SchoolIcon,
+  GitHub as GitHubIcon,
+  Language as LanguageIcon
+} from '@mui/icons-material';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        
-        <h1 className={styles.title}>Welcome to My Blog</h1>
-        <p className={styles.description}>
-          A simple blog built with Next.js and deployed on Cloudflare Workers
-        </p>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <AppBar position="static" color="default" elevation={1}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Next.js Blog
+          </Typography>
+          <Button color="inherit" component={Link} href="/posts">
+            Blog Posts
+          </Button>
+        </Toolbar>
+      </AppBar>
 
-        <div className={styles.ctas}>
-          <Link href="/posts" className={styles.primary}>
-            <Image
-              className={styles.logo}
-              src="/file.svg"
-              alt="File icon"
-              width={20}
-              height={20}
-            />
-            Read Blog Posts
-          </Link>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Next.js Docs
-          </a>
-        </div>
+      <Container maxWidth="lg" sx={{ flex: 1, py: 8 }}>
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Image
+            src="/next.svg"
+            alt="Next.js logo"
+            width={180}
+            height={38}
+            priority
+            style={{ marginBottom: '2rem' }}
+          />
+          
+          <Typography variant="h2" component="h1" gutterBottom>
+            Welcome to My Blog
+          </Typography>
+          <Typography variant="h5" color="text.secondary" paragraph>
+            A simple blog built with Next.js and deployed on Cloudflare Workers
+          </Typography>
 
-        <div className={styles.features}>
-          <div className={styles.feature}>
-            <h3>🚀 Fast</h3>
-            <p>Built with Next.js for optimal performance</p>
-          </div>
-          <div className={styles.feature}>
-            <h3>📝 Markdown</h3>
-            <p>Write content in Markdown with MDX support</p>
-          </div>
-          <div className={styles.feature}>
-            <h3>☁️ Cloudflare</h3>
-            <p>Deployed globally on Cloudflare Workers</p>
-          </div>
-        </div>
-      </main>
-      
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn Next.js
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Templates
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 6 }}>
+            <Button
+              variant="contained"
+              size="large"
+              component={Link}
+              href="/posts"
+              startIcon={<ArticleIcon />}
+            >
+              Read Blog Posts
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              href="https://nextjs.org/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              startIcon={<SchoolIcon />}
+            >
+              Next.js Docs
+            </Button>
+          </Stack>
+        </Box>
+
+        <Box sx={{ display: 'flex', gap: 3, mb: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Card sx={{ minWidth: 280, flex: '1 1 300px' }}>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom>
+                🚀
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Fast
+              </Typography>
+              <Typography color="text.secondary">
+                Built with Next.js for optimal performance
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card sx={{ minWidth: 280, flex: '1 1 300px' }}>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom>
+                📝
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Markdown
+              </Typography>
+              <Typography color="text.secondary">
+                Write content in Markdown with MDX support
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card sx={{ minWidth: 280, flex: '1 1 300px' }}>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom>
+                ☁️
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Cloudflare
+              </Typography>
+              <Typography color="text.secondary">
+                Deployed globally on Cloudflare Workers
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+      </Container>
+
+      <Box component="footer" sx={{ bgcolor: 'grey.100', py: 3 }}>
+        <Container maxWidth="lg">
+          <Stack direction="row" spacing={3} justifyContent="center">
+            <Button
+              startIcon={<SchoolIcon />}
+              href="https://nextjs.org/learn"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              Learn Next.js
+            </Button>
+            <Button
+              startIcon={<LanguageIcon />}
+              href="https://vercel.com/templates"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              Templates
+            </Button>
+            <Button
+              startIcon={<GitHubIcon />}
+              href="https://nextjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              Go to nextjs.org →
+            </Button>
+          </Stack>
+        </Container>
+      </Box>
+    </Box>
   );
 }
