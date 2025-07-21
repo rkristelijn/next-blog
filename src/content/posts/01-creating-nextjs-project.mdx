@@ -1,0 +1,165 @@
+---
+title: "Creating a Next.js Project with OpenNext for Easy Cloudflare Deployment"
+date: "2024-01-25"
+excerpt: "Learn how to create a Next.js project from scratch using OpenNext for seamless Cloudflare deployment. Step-by-step guide with all the commands and configuration needed."
+---
+
+# Creating a Next.js Project with OpenNext for Easy Cloudflare Deployment
+
+In this first post of our series, I'll show you how to create a Next.js project from scratch that's optimized for Cloudflare deployment using OpenNext. This approach makes deployment incredibly simple and efficient.
+
+## Why OpenNext?
+
+OpenNext is a framework that adapts Next.js applications for edge deployment platforms like Cloudflare Pages. It handles the complexity of server-side rendering, static generation, and edge functions automatically, making deployment straightforward.
+
+## Step 1: Create the Base Next.js Project
+
+Start with the official Next.js template:
+
+```bash
+npx create-next-app@latest next-blog --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+```
+
+**Key choices explained:**
+- **TypeScript**: Essential for type safety and better developer experience
+- **Tailwind**: We'll remove this later, but it's included in the template
+- **ESLint**: Code quality and consistency
+- **App Router**: Next.js 15's modern routing system
+- **Src directory**: Better project organization
+- **Import aliases**: Cleaner import statements with `@/*`
+
+## Step 2: Install OpenNext for Cloudflare
+
+Add OpenNext to your project:
+
+```bash
+npm install @opennextjs/cloudflare
+```
+
+This package provides the tools needed to build and deploy Next.js applications to Cloudflare Pages.
+
+## Step 3: Configure Package.json Scripts
+
+Update your `package.json` scripts for Cloudflare deployment:
+
+```json
+{
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ci:build": "opennextjs-cloudflare build",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+  }
+}
+```
+
+## Step 4: Create Cloudflare Configuration
+
+Create `wrangler.jsonc` for Cloudflare Pages configuration:
+
+```json
+{
+  "name": "next-blog",
+  "compatibility_date": "2024-01-01",
+  "compatibility_flags": ["nodejs_compat"]
+}
+```
+
+## Step 5: Configure Next.js for Cloudflare
+
+Update `next.config.ts` for optimal Cloudflare deployment:
+
+```typescript
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  }
+};
+
+export default nextConfig;
+```
+
+## Step 6: Remove Unnecessary Dependencies
+
+Following the YAGNI principle, remove Tailwind CSS since we'll use Material-UI:
+
+```bash
+npm uninstall tailwindcss postcss autoprefixer
+```
+
+Also remove Tailwind configuration files:
+```bash
+rm tailwind.config.ts postcss.config.js
+```
+
+## Step 7: Test Local Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Your application should now be running at `http://localhost:3000`.
+
+## Step 8: Test Cloudflare Build
+
+Test the Cloudflare build process:
+
+```bash
+npm run ci:build
+```
+
+This command builds your application specifically for Cloudflare deployment.
+
+## Project Structure After Setup
+
+```
+next-blog/
+├── src/
+│   ├── app/                 # Next.js App Router pages
+│   ├── components/          # UI components (we'll add these later)
+│   └── lib/                 # Utility functions
+├── public/                  # Static assets
+├── wrangler.jsonc           # Cloudflare configuration
+├── next.config.ts           # Next.js configuration
+└── package.json             # Dependencies and scripts
+```
+
+## Key Benefits of This Setup
+
+1. **Easy Deployment**: OpenNext handles the complexity of edge deployment
+2. **Type Safety**: Full TypeScript support from the start
+3. **Modern Architecture**: Uses Next.js 15's App Router
+4. **Cloudflare Optimized**: Built specifically for Cloudflare Pages
+5. **Clean Foundation**: Removed unnecessary dependencies
+
+## What's Next?
+
+In the next post, we'll set up automated deployment using GitHub Actions and Cloudflare Pages. This will enable continuous deployment whenever you push changes to your repository.
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. **Build Errors**: Check that all dependencies are properly installed
+2. **TypeScript Errors**: Ensure your TypeScript configuration is correct
+3. **Cloudflare Build Issues**: Verify your `wrangler.jsonc` configuration
+
+## Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [OpenNext Documentation](https://opennext.js.org/)
+- [Cloudflare Pages Documentation](https://developers.cloudflare.com/pages/)
+
+---
+
+This completes the initial project setup. You now have a Next.js project ready for Cloudflare deployment. In the next post, we'll automate the deployment process with GitHub Actions! 
