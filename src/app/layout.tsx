@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Next.js Blog",
   description: "A modern blog built with Next.js and Material-UI",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

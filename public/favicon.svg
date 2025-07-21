@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1976d2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565c0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded rectangle background -->
+  <rect x="2" y="2" width="28" height="28" rx="6" fill="url(#bg)"/>
+  
+  <!-- Book/document icon -->
+  <g fill="white">
+    <!-- Main document -->
+    <rect x="8" y="6" width="16" height="20" rx="1" fill="white" opacity="0.9"/>
+    
+    <!-- Lines representing text -->
+    <rect x="10" y="9" width="12" height="1.5" rx="0.5"/>
+    <rect x="10" y="12" width="10" height="1.5" rx="0.5"/>
+    <rect x="10" y="15" width="11" height="1.5" rx="0.5"/>
+    <rect x="10" y="18" width="8" height="1.5" rx="0.5"/>
+    <rect x="10" y="21" width="9" height="1.5" rx="0.5"/>
+  </g>
+  
+  <!-- Decorative corner accent -->
+  <path d="M26 6l-4 4V6h4z" fill="white" opacity="0.7"/>
+</svg> 
