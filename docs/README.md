@@ -1,5 +1,6 @@
 - [Set up from scratch](./setup.md)
 - [Cloudflare deployment setup](./cloudflare.md)
+- [Coding principles and rules](./rules.md)
 - Architecture guide
 - API reference
 - Usage guide
