@@ -1,0 +1,218 @@
+---
+title: "Fixing Cloudflare Deployment: From Runtime Errors to Static Site Generation"
+date: "2024-12-19"
+excerpt: "How I solved the 'fs.readdirSync is not implemented' error by implementing proper static site generation for my Next.js blog on Cloudflare Workers."
+---
+
+# Fixing Cloudflare Deployment: From Runtime Errors to Static Site Generation
+
+## The Problem
+
+After successfully setting up my Next.js blog with MDX content and Material-UI, I encountered a critical deployment issue on Cloudflare. The application was failing to display blog posts, and the Cloudflare logs showed this error:
+
+```
+Error reading posts directory: Error: [unenv] fs.readdirSync is not implemented yet!
+```
+
+This error occurred because my blog was trying to use Node.js file system operations (`fs.readdirSync`) at **runtime** in the Cloudflare Workers environment, which doesn't support these Node.js APIs.
+
+## Root Cause Analysis
+
+The issue stemmed from how I initially implemented the blog post fetching:
+
+```typescript
+// This was the problem - trying to read files at runtime
+export default function PostsPage() {
+  const posts = getAllPosts(); // This calls fs.readdirSync at runtime
+  // ...
+}
+```
+
+In a traditional Node.js environment, this works fine. However, Cloudflare Workers run in a V8 isolate environment that doesn't have access to Node.js file system APIs. The application was trying to read the `src/content/posts/` directory at runtime, which simply isn't possible in this environment.
+
+## The Solution: Static Site Generation (SSG)
+
+The solution was to implement **Static Site Generation (SSG)** to move all file system operations from runtime to **build time**. Here's how I fixed it:
+
+### 1. Made Pages Async
+
+```typescript
+// Before: Synchronous component
+export default function PostsPage() {
+  const posts = getAllPosts();
+  // ...
+}
+
+// After: Async component for build-time data fetching
+export default async function PostsPage() {
+  const posts = getAllPosts(); // Now runs at build time
+  // ...
+}
+```
+
+### 2. Added generateStaticParams for Dynamic Routes
+
+```typescript
+// This tells Next.js to pre-generate all dynamic routes at build time
+export async function generateStaticParams() {
+  try {
+    const slugs = getAllPostSlugs();
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+```
+
+### 3. Updated Next.js Configuration
+
+```typescript
+// Removed output: "export" which was causing conflicts
+const nextConfig: NextConfig = {
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
+};
+```
+
+### 4. Cleaned Up Dependencies
+
+Removed unused MDX packages that were causing conflicts:
+
+```bash
+npm uninstall @mdx-js/loader @mdx-js/react @next/mdx
+```
+
+## How It Works Now
+
+### Build Time Process
+1. **GitHub Actions** (or local build) runs `npm run build`
+2. **Next.js** calls `generateStaticParams()` to get all post slugs
+3. **File System Operations** read all MDX files from `src/content/posts/`
+4. **Static HTML** is generated for each post and the posts listing page
+5. **Assets** are optimized and bundled
+
+### Runtime Process
+1. **Cloudflare Workers** serves pre-generated static HTML files
+2. **No File System Access** needed at runtime
+3. **Fast Loading** because everything is pre-rendered
+4. **SEO Friendly** because search engines can crawl static content
+
+## Benefits of This Approach
+
+### ✅ Performance
+- **Instant Loading**: Static HTML files load immediately
+- **No Server Processing**: No runtime computation needed
+- **CDN Optimization**: Cloudflare's global CDN serves content efficiently
+
+### ✅ Reliability
+- **No Runtime Dependencies**: No file system access needed
+- **Predictable Behavior**: Same output every time
+- **Error Resilience**: Build-time errors are caught early
+
+### ✅ Scalability
+- **Thousands of Posts**: Can handle large content libraries
+- **Global Distribution**: Cloudflare's edge network serves content worldwide
+- **Cost Effective**: No server-side processing costs
+
+### ✅ SEO & Accessibility
+- **Search Engine Friendly**: Static HTML is easily crawlable
+- **Social Media Ready**: Meta tags are pre-rendered
+- **Accessibility**: Proper HTML structure for screen readers
+
+## Technical Implementation Details
+
+### Posts Data Layer
+The `src/lib/posts.ts` file remained largely unchanged, but now it's called at build time instead of runtime:
+
+```typescript
+export function getAllPosts(): Post[] {
+  try {
+    const fileNames = fs.readdirSync(POSTS_DIRECTORY);
+    const mdxFiles = fileNames.filter(fileName => fileName.endsWith('.mdx'));
+    
+    const posts = mdxFiles.map(fileName => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      return getPostBySlug(slug);
+    }).filter((post): post is Post => post !== undefined);
+    
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+    return [];
+  }
+}
+```
+
+### Error Handling
+Added comprehensive error handling to prevent build failures:
+
+```typescript
+export async function generateStaticParams() {
+  try {
+    const slugs = getAllPostSlugs();
+    console.log('Generated static params for slugs:', slugs);
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+```
+
+## Deployment Process
+
+The deployment now follows this optimized flow:
+
+1. **Build**: `npm run ci:build` (OpenNext build for Cloudflare)
+2. **Static Generation**: All pages pre-rendered with content
+3. **Bundle**: Assets optimized and bundled
+4. **Deploy**: `npm run deploy` (Deploy to Cloudflare Workers)
+5. **Serve**: Static content served from Cloudflare's edge network
+
+## Lessons Learned
+
+### 1. Understand Your Deployment Environment
+Different deployment platforms have different capabilities. Cloudflare Workers is excellent for performance but has limitations compared to traditional Node.js servers.
+
+### 2. Static Site Generation is Powerful
+For content-heavy sites like blogs, SSG provides the best performance, reliability, and cost-effectiveness.
+
+### 3. Build-Time vs Runtime Operations
+Moving operations from runtime to build time often results in better performance and reliability.
+
+### 4. Error Handling is Crucial
+Proper error handling in build-time operations prevents deployment failures and provides better debugging information.
+
+## Future Considerations
+
+### Content Updates
+- **New Posts**: Require a new deployment (GitHub Actions can automate this)
+- **Content Management**: Consider a headless CMS for non-technical users
+- **Incremental Builds**: Only rebuild changed content
+
+### Performance Optimization
+- **Image Optimization**: Implement Cloudflare Images
+- **Caching Strategies**: Leverage Cloudflare's caching capabilities
+- **Bundle Analysis**: Monitor and optimize JavaScript bundles
+
+### Monitoring
+- **Build Monitoring**: Track build times and success rates
+- **Performance Monitoring**: Monitor Core Web Vitals
+- **Error Tracking**: Implement error tracking for runtime issues
+
+## Conclusion
+
+The transition from runtime file system operations to static site generation was a crucial fix that transformed my blog from a broken deployment to a fast, reliable, and scalable application.
+
+This approach aligns perfectly with the **KISS principle** (Keep It Simple, Stupid) and **YAGNI principle** (You Aren't Gonna Need It) from our development rules. We're using the simplest solution that works reliably, without over-engineering for features we don't need.
+
+The blog is now live at [https://next-blog.rkristelijn.workers.dev](https://next-blog.rkristelijn.workers.dev) and serving all posts correctly with excellent performance.
+
+**Key Takeaway**: When deploying to edge environments like Cloudflare Workers, always prefer static generation over runtime operations for content-heavy applications. The performance and reliability benefits are significant, and the implementation is often simpler than dynamic alternatives. 
