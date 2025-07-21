@@ -31,6 +31,7 @@ function generatePostsData() {
         slug,
         title: data.title,
         date: data.date,
+        author: data.author,
         excerpt: data.excerpt,
         content
       };

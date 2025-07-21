@@ -9,7 +9,7 @@
  */
 
 import ReactMarkdown from 'react-markdown';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 import type { PostContentProps } from '@/types';
 
 /**
@@ -23,9 +23,11 @@ export default function PostContent({ post }: PostContentProps) {
       <Typography variant="h3" component="h1" gutterBottom>
         {post.title}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {post.date}
-      </Typography>
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary">
+          {post.date} by {post.author}
+        </Typography>
+      </Stack>
       
       <Box sx={{ 
         '& h1': { fontSize: '2rem', fontWeight: 700, mb: 2, mt: 3 },

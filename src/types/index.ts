@@ -7,6 +7,7 @@ export interface Post {
   title: string;
   excerpt: string;
   date: string;
+  author: string;
   slug: string;
   content: string;
 }

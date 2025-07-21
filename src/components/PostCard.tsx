@@ -7,7 +7,7 @@
  */
 
 import Link from 'next/link';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
 import type { PostCardProps } from '@/types';
 
 /**
@@ -42,9 +42,11 @@ export default function PostCard({ post }: PostCardProps) {
         <Typography color="text.secondary" paragraph>
           {post.excerpt}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {post.date}
-        </Typography>
+        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+          <Typography variant="body2" color="text.secondary">
+            {post.date} by {post.author}
+          </Typography>
+        </Stack>
       </CardContent>
     </Card>
   );
