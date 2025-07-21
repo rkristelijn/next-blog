@@ -30,33 +30,207 @@ export default function PostsPage() {
 
 In a traditional Node.js environment, this works fine. However, Cloudflare Workers run in a V8 isolate environment that doesn't have access to Node.js file system APIs. The application was trying to read the `src/content/posts/` directory at runtime, which simply isn't possible in this environment.
 
-## The Solution: Static Site Generation (SSG)
+## The Solution: Static Data Generation
 
-The solution was to implement **Static Site Generation (SSG)** to move all file system operations from runtime to **build time**. Here's how I fixed it:
+After several attempts with different approaches, I implemented a **static data generation** solution that moves all file system operations from runtime to **build time**. Here's the final working solution:
 
-### 1. Made Pages Async
+### 1. Create a Build-Time Data Generator
 
-```typescript
-// Before: Synchronous component
-export default function PostsPage() {
-  const posts = getAllPosts();
-  // ...
+Create `scripts/generate-posts-data.js`:
+
+```javascript
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+
+const POSTS_DIRECTORY = path.join(process.cwd(), 'src/content/posts');
+const OUTPUT_FILE = path.join(process.cwd(), 'src/data/posts.json');
+
+// Ensure the data directory exists
+const dataDir = path.dirname(OUTPUT_FILE);
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
 }
 
-// After: Async component for build-time data fetching
-export default async function PostsPage() {
-  const posts = getAllPosts(); // Now runs at build time
-  // ...
+function generatePostsData() {
+  try {
+    console.log('Generating posts data...');
+    
+    // Read all MDX files
+    const fileNames = fs.readdirSync(POSTS_DIRECTORY);
+    const mdxFiles = fileNames.filter(fileName => fileName.endsWith('.mdx'));
+    
+    const posts = mdxFiles.map(fileName => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      const fullPath = path.join(POSTS_DIRECTORY, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
+      
+      return {
+        id: slug,
+        slug,
+        title: data.title,
+        date: data.date,
+        excerpt: data.excerpt,
+        content
+      };
+    }).filter(post => post.title && post.date && post.excerpt);
+    
+    // Sort by date (newest first)
+    posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Generate slugs array
+    const slugs = posts.map(post => post.slug);
+    
+    // Create the data object
+    const postsData = {
+      posts,
+      slugs,
+      generatedAt: new Date().toISOString()
+    };
+    
+    // Write to JSON file
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(postsData, null, 2));
+    
+    console.log(`✅ Generated posts data with ${posts.length} posts`);
+    console.log(`📁 Output: ${OUTPUT_FILE}`);
+    
+    return postsData;
+  } catch (error) {
+    console.error('❌ Error generating posts data:', error);
+    process.exit(1);
+  }
+}
+
+// Run if called directly
+generatePostsData();
+```
+
+### 2. Create Static Posts Library
+
+Create `src/lib/posts-static.ts`:
+
+```typescript
+/**
+ * Static posts data layer - reads from pre-generated JSON file
+ * 
+ * This module reads posts from a static JSON file generated at build time,
+ * avoiding any runtime file system operations that aren't supported in
+ * Cloudflare Workers environment.
+ */
+
+import type { Post } from '@/types';
+
+// Import the static data (this will be bundled at build time)
+import postsData from '@/data/posts.json';
+
+/**
+ * Get all blog posts from static data
+ * @returns Array of all posts with metadata
+ */
+export function getAllPosts(): Post[] {
+  return postsData.posts;
+}
+
+/**
+ * Get a specific post by its slug
+ * @param slug - The post slug to look up
+ * @returns The post if found, undefined otherwise
+ */
+export function getPostBySlug(slug: string): Post | undefined {
+  return postsData.posts.find((post: Post) => post.slug === slug);
+}
+
+/**
+ * Get all post slugs (useful for static generation)
+ * @returns Array of all post slugs
+ */
+export function getAllPostSlugs(): string[] {
+  return postsData.slugs;
+}
+
+/**
+ * Check if a post exists
+ * @param slug - The post slug to check
+ * @returns True if the post exists, false otherwise
+ */
+export function postExists(slug: string): boolean {
+  return postsData.slugs.includes(slug);
 }
 ```
 
-### 2. Added generateStaticParams for Dynamic Routes
+### 3. Update Pages to Use Static Data
+
+Update `src/app/posts/page.tsx`:
 
 ```typescript
-// This tells Next.js to pre-generate all dynamic routes at build time
+import { Container, Typography, Box } from '@mui/material';
+import Navigation from '@/components/Navigation';
+import PostCard from '@/components/PostCard';
+import { getAllPosts } from '@/lib/posts-static';
+import type { Metadata } from 'next';
+
+/**
+ * Generate metadata for the posts page
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const posts = getAllPosts();
+  return {
+    title: 'Blog Posts',
+    description: `Browse all ${posts.length} blog posts`,
+  };
+}
+
+/**
+ * Posts listing page - displays all available blog posts
+ * 
+ * This page follows the C4C principle by using clear, reusable components
+ * and the HIPI principle by hiding implementation details behind clean interfaces.
+ * 
+ * Uses static data to avoid runtime file system operations.
+ */
+export default function PostsPage() {
+  // Get posts from static data (no file system operations)
+  const posts = getAllPosts();
+
+  return (
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navigation title="Blog Posts" showHome={true} showBack={false} />
+
+      <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 4 }}>
+          Blog Posts
+        </Typography>
+        
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </Box>
+      </Container>
+    </Box>
+  );
+}
+```
+
+Update `src/app/posts/[slug]/page.tsx`:
+
+```typescript
+import { notFound } from 'next/navigation';
+import { Container, Box } from '@mui/material';
+import Navigation from '@/components/Navigation';
+import PostContent from '@/components/PostContent';
+import { getPostBySlug, getAllPostSlugs } from '@/lib/posts-static';
+import type { PostPageProps } from '@/types';
+import type { Metadata } from 'next';
+
+/**
+ * Generate static params for all blog posts at build time
+ */
 export async function generateStaticParams() {
   try {
     const slugs = getAllPostSlugs();
+    console.log('Generated static params for slugs:', slugs);
     return slugs.map((slug) => ({
       slug,
     }));
@@ -65,48 +239,132 @@ export async function generateStaticParams() {
     return [];
   }
 }
+
+/**
+ * Generate metadata for individual post pages
+ */
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+  };
+}
+
+/**
+ * Individual blog post page - displays a single blog post
+ * 
+ * This page follows the C4C principle by using clear, reusable components
+ * and proper error handling. It also follows the HIPI principle by hiding
+ * data fetching logic behind clean interfaces.
+ * 
+ * Uses static data to avoid runtime file system operations.
+ */
+export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navigation title={post.title} showHome={true} showBack={true} />
+
+      <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
+        <PostContent post={post} />
+      </Container>
+    </Box>
+  );
+}
 ```
 
-### 3. Updated Next.js Configuration
+### 4. Configure Build Process
 
-```typescript
-// Removed output: "export" which was causing conflicts
-const nextConfig: NextConfig = {
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  },
-};
-```
+Update `package.json` to include the build hook:
 
-### 4. Cleaned Up Dependencies
-
-Removed unused MDX packages that were causing conflicts:
-
-```bash
-npm uninstall @mdx-js/loader @mdx-js/react @next/mdx
+```json
+{
+  "name": "next-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "prebuild": "node scripts/generate-posts-data.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "ci:build": "opennextjs-cloudflare build",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+  }
+}
 ```
 
 ## How It Works Now
 
-### Build Time Process
-1. **GitHub Actions** (or local build) runs `npm run build`
-2. **Next.js** calls `generateStaticParams()` to get all post slugs
-3. **File System Operations** read all MDX files from `src/content/posts/`
-4. **Static HTML** is generated for each post and the posts listing page
-5. **Assets** are optimized and bundled
+### Build Time Process (Your Machine/GitHub Actions)
+1. **Prebuild Hook**: `node scripts/generate-posts-data.js` runs
+2. **File System Operations**: Reads all MDX files using `fs.readdirSync` ✅ **Safe - runs on your machine**
+3. **Data Generation**: Creates `src/data/posts.json` with all post data
+4. **Next.js Build**: Builds the application with the static data bundled
 
-### Runtime Process
-1. **Cloudflare Workers** serves pre-generated static HTML files
-2. **No File System Access** needed at runtime
-3. **Fast Loading** because everything is pre-rendered
-4. **SEO Friendly** because search engines can crawl static content
+### Runtime Process (Cloudflare Workers)
+1. **No File System Access**: Application imports static JSON file
+2. **Fast Data Access**: Returns pre-generated data from memory
+3. **Zero Runtime Operations**: No `fs.readdirSync` calls on Cloudflare
+
+## Key Technical Details
+
+### Module Format Fix
+The script needed to be converted from CommonJS to ES modules:
+
+```javascript
+// Before (CommonJS)
+const fs = require('fs');
+const path = require('path');
+const matter = require('gray-matter');
+
+// After (ES Modules)
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+```
+
+And `package.json` needed:
+```json
+{
+  "type": "module"
+}
+```
+
+### TypeScript Configuration
+The static posts library imports JSON directly:
+```typescript
+import postsData from '@/data/posts.json';
+```
+
+This works because:
+- The JSON file exists at build time
+- Next.js handles JSON imports automatically
+- No TypeScript errors since the file is present
 
 ## Benefits of This Approach
 
 ### ✅ Performance
-- **Instant Loading**: Static HTML files load immediately
-- **No Server Processing**: No runtime computation needed
+- **Instant Loading**: Static JSON data loads immediately
+- **No Runtime Processing**: Data is pre-generated and cached
 - **CDN Optimization**: Cloudflare's global CDN serves content efficiently
 
 ### ✅ Reliability
@@ -124,57 +382,25 @@ npm uninstall @mdx-js/loader @mdx-js/react @next/mdx
 - **Social Media Ready**: Meta tags are pre-rendered
 - **Accessibility**: Proper HTML structure for screen readers
 
-## Technical Implementation Details
-
-### Posts Data Layer
-The `src/lib/posts.ts` file remained largely unchanged, but now it's called at build time instead of runtime:
-
-```typescript
-export function getAllPosts(): Post[] {
-  try {
-    const fileNames = fs.readdirSync(POSTS_DIRECTORY);
-    const mdxFiles = fileNames.filter(fileName => fileName.endsWith('.mdx'));
-    
-    const posts = mdxFiles.map(fileName => {
-      const slug = fileName.replace(/\.mdx$/, '');
-      return getPostBySlug(slug);
-    }).filter((post): post is Post => post !== undefined);
-    
-    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  } catch (error) {
-    console.error('Error reading posts directory:', error);
-    return [];
-  }
-}
-```
-
-### Error Handling
-Added comprehensive error handling to prevent build failures:
-
-```typescript
-export async function generateStaticParams() {
-  try {
-    const slugs = getAllPostSlugs();
-    console.log('Generated static params for slugs:', slugs);
-    return slugs.map((slug) => ({
-      slug,
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
-```
-
 ## Deployment Process
 
 The deployment now follows this optimized flow:
 
-1. **Build**: `npm run ci:build` (OpenNext build for Cloudflare)
-2. **Static Generation**: All pages pre-rendered with content
-3. **Bundle**: Assets optimized and bundled
-4. **Deploy**: `npm run deploy` (Deploy to Cloudflare Workers)
-5. **Serve**: Static content served from Cloudflare's edge network
+1. **Prebuild**: `node scripts/generate-posts-data.js` (GitHub Actions/Local)
+2. **Build**: `npm run ci:build` (OpenNext build for Cloudflare)
+3. **Static Generation**: All pages pre-rendered with content
+4. **Bundle**: Assets optimized and bundled
+5. **Deploy**: `npm run deploy` (Deploy to Cloudflare Workers)
+6. **Serve**: Static content served from Cloudflare's edge network
+
+## Verification
+
+You can verify the fix worked by:
+
+1. **Checking Cloudflare Logs**: No more `fs.readdirSync is not implemented yet!` errors
+2. **Blog Functionality**: All posts display correctly at https://next-blog.rkristelijn.workers.dev/posts/
+3. **Performance**: Fast loading times with static content
+4. **Build Output**: Successful builds with generated data
 
 ## Lessons Learned
 
@@ -187,7 +413,10 @@ For content-heavy sites like blogs, SSG provides the best performance, reliabili
 ### 3. Build-Time vs Runtime Operations
 Moving operations from runtime to build time often results in better performance and reliability.
 
-### 4. Error Handling is Crucial
+### 4. Module Format Matters
+When using ES modules, ensure all scripts and configurations are consistent.
+
+### 5. Error Handling is Crucial
 Proper error handling in build-time operations prevents deployment failures and provides better debugging information.
 
 ## Future Considerations
@@ -209,10 +438,12 @@ Proper error handling in build-time operations prevents deployment failures and 
 
 ## Conclusion
 
-The transition from runtime file system operations to static site generation was a crucial fix that transformed my blog from a broken deployment to a fast, reliable, and scalable application.
+The transition from runtime file system operations to static data generation was a crucial fix that transformed my blog from a broken deployment to a fast, reliable, and scalable application.
 
 This approach aligns perfectly with the **KISS principle** (Keep It Simple, Stupid) and **YAGNI principle** (You Aren't Gonna Need It) from our development rules. We're using the simplest solution that works reliably, without over-engineering for features we don't need.
 
 The blog is now live at [https://next-blog.rkristelijn.workers.dev](https://next-blog.rkristelijn.workers.dev) and serving all posts correctly with excellent performance.
 
-**Key Takeaway**: When deploying to edge environments like Cloudflare Workers, always prefer static generation over runtime operations for content-heavy applications. The performance and reliability benefits are significant, and the implementation is often simpler than dynamic alternatives. 
+**Key Takeaway**: When deploying to edge environments like Cloudflare Workers, always prefer static generation over runtime operations for content-heavy applications. The performance and reliability benefits are significant, and the implementation is often simpler than dynamic alternatives.
+
+**Final Note**: The `fs.readdirSync` operations are now **ONLY** executed during build time on your machine or GitHub Actions, **NEVER** on Cloudflare Workers at runtime. This ensures complete compatibility with the Cloudflare Workers environment while maintaining all the functionality of a dynamic blog. 

@@ -36,8 +36,8 @@ function generatePostsData() {
       };
     }).filter(post => post.title && post.date && post.excerpt);
     
-    // Sort by date (newest first)
-    posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Sort by filename (numerical order)
+    posts.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
     
     // Generate slugs array
     const slugs = posts.map(post => post.slug);
