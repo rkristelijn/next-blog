@@ -1,7 +1,7 @@
 import { Container, Typography, Box } from '@mui/material';
 import Navigation from '@/components/Navigation';
 import PostCard from '@/components/PostCard';
-import { getAllPosts } from '@/lib/posts';
+import { getAllPosts } from '@/lib/posts-static';
 import type { Metadata } from 'next';
 
 /**
@@ -21,10 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
  * This page follows the C4C principle by using clear, reusable components
  * and the HIPI principle by hiding implementation details behind clean interfaces.
  * 
- * Uses static generation to pre-render all posts at build time.
+ * Uses static data to avoid runtime file system operations.
  */
-export default async function PostsPage() {
-  // Fetch posts at build time, not runtime
+export default function PostsPage() {
+  // Get posts from static data (no file system operations)
   const posts = getAllPosts();
 
   return (
