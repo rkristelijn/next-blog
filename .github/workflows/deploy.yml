@@ -23,6 +23,21 @@ jobs:
       - name: Build project
         run: npm run ci:build
 
+      - name: Check if Cloudflare Worker exists
+        id: check-worker
+        run: |
+          # Check if the worker exists by trying a dry-run deployment
+          if npx wrangler deploy --dry-run 2>&1 | grep -q "No deployments found\|Worker not found"; then
+            echo "worker_exists=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Cloudflare Worker 'next-blog' does not exist, will create it on first deployment"
+          else
+            echo "worker_exists=true" >> $GITHUB_OUTPUT
+            echo "✅ Cloudflare Worker 'next-blog' already exists"
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Publish to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
