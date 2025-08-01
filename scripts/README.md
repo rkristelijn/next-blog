@@ -48,6 +48,23 @@ For the GitHub Action to work, you need to add these secrets in your repository 
 3. Click "New repository secret"
 4. Add both secrets with the exact names above
 
+#### Troubleshooting
+
+##### Workers.dev Subdomain Issue
+
+If you see this error:
+```
+You need to register a workers.dev subdomain before publishing to workers.dev
+```
+
+**Solution**: The `wrangler.jsonc` file includes `"workers_dev": true` which automatically registers a workers.dev subdomain on first deployment.
+
+##### First Deployment
+
+- The first deployment will automatically create the worker and register a workers.dev subdomain
+- Your blog will be available at: `https://next-blog.YOUR_SUBDOMAIN.workers.dev`
+- The exact URL will be shown in the GitHub Actions logs
+
 #### Why This Approach?
 
 For existing projects with `wrangler.jsonc` configuration:
