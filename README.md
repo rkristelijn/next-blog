@@ -10,7 +10,7 @@ Detailed documentation can be found in the [./docs](docs) folder.
 
 ## Demo
 
-https://next-blog.rkristelijn.workers.dev/
+https://next-blog.gert.workers.dev/
 
 ## Prerequisites
 
