@@ -1,5 +1,7 @@
 # Next-blog
 
+Gert's version
+
 This is a simple blog application using Next.js and Markdown files for content. It's designed to be a starting point for building your own blog, where changing (creating, updating, deleting) blog posts will trigger a new build. 
 
 NextJS' router will take care of navigating to the right page containing the blog post, reading the respective markdown file, and rendering the content. 
