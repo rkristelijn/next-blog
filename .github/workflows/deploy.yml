@@ -26,21 +26,6 @@ jobs:
           node scripts/generate-posts-data.js
           echo "✅ Posts data regenerated successfully!"
 
-      - name: Commit updated posts data
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add src/data/posts.json
-          if git diff --staged --quiet; then
-            echo "📝 No changes to posts.json, skipping commit"
-          else
-            git commit -m "Auto-update posts.json with latest content [skip ci]"
-            git push
-            echo "✅ Updated posts.json committed and pushed"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build project
         run: npm run ci:build
 
