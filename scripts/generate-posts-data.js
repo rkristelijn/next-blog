@@ -12,6 +12,21 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
+/**
+ * Convert a string to a URL-friendly slug
+ * @param {string} text - The text to convert
+ * @returns {string} - URL-friendly slug
+ */
+function createSlug(text) {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with hyphens
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars except hyphens
+    .replace(/\-\-+/g, '-')         // Replace multiple hyphens with single hyphen
+    .replace(/^-+/, '')             // Trim hyphens from start
+    .replace(/-+$/, '');            // Trim hyphens from end
+}
+
 function generatePostsData() {
   try {
     console.log('Generating posts data...');
@@ -21,19 +36,23 @@ function generatePostsData() {
     const mdxFiles = fileNames.filter(fileName => fileName.endsWith('.mdx'));
     
     const posts = mdxFiles.map(fileName => {
-      const slug = fileName.replace(/\.mdx$/, '');
+      const fileSlug = fileName.replace(/\.mdx$/, '');
       const fullPath = path.join(POSTS_DIRECTORY, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
       
+      // Create URL-friendly slug from title if available, otherwise from filename
+      const urlSlug = data.title ? createSlug(data.title) : createSlug(fileSlug);
+      
       return {
-        id: slug,
-        slug,
+        id: fileSlug,           // Keep original filename as ID for sorting
+        slug: urlSlug,          // Use URL-friendly slug for routing
         title: data.title,
         date: data.date,
         author: data.author,
         excerpt: data.excerpt,
-        content
+        content,
+        originalFilename: fileName  // Keep track of original filename
       };
     }).filter(post => post.title && post.date && post.excerpt);
     
@@ -42,6 +61,13 @@ function generatePostsData() {
     
     // Generate slugs array
     const slugs = posts.map(post => post.slug);
+    
+    // Check for duplicate slugs
+    const duplicateSlugs = slugs.filter((slug, index) => slugs.indexOf(slug) !== index);
+    if (duplicateSlugs.length > 0) {
+      console.warn('⚠️  Warning: Duplicate slugs found:', duplicateSlugs);
+      console.warn('   Consider renaming files or titles to avoid conflicts');
+    }
     
     // Create the data object
     const postsData = {
@@ -55,6 +81,13 @@ function generatePostsData() {
     
     console.log(`✅ Generated posts data with ${posts.length} posts`);
     console.log(`📁 Output: ${OUTPUT_FILE}`);
+    
+    // Log slug transformations for debugging
+    posts.forEach(post => {
+      if (post.id !== post.slug) {
+        console.log(`🔄 Slug transformation: "${post.id}" → "${post.slug}"`);
+      }
+    });
     
     return postsData;
   } catch (error) {
