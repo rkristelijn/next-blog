@@ -2,6 +2,52 @@
 
 This document explains how to manage the Next.js Blog Template repository, handle contributions from forks, and maintain synchronization between the main repository and community forks.
 
+## Repository Workflow Policy
+
+### Branch Protection and Pull Request Workflow
+
+**Important:** All changes to the main branch must go through pull requests. Direct pushes to main are not allowed.
+
+#### Workflow for All Changes:
+
+1. **Create Feature Branch**
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/descriptive-name
+   ```
+
+2. **Make Changes and Commit**
+   ```bash
+   git add .
+   git commit -m "feat: descriptive commit message"
+   ```
+
+3. **Push Branch and Create PR**
+   ```bash
+   git push origin feature/descriptive-name
+   # Then create PR through GitHub interface
+   ```
+
+4. **Review and Merge**
+   - All PRs require review
+   - Use squash merge for clean history
+   - Delete branch after merge
+
+#### Branch Naming Conventions:
+- `feature/add-new-functionality` - New features
+- `fix/resolve-deployment-issue` - Bug fixes
+- `docs/update-user-manual` - Documentation updates
+- `refactor/improve-code-structure` - Code improvements
+- `chore/update-dependencies` - Maintenance tasks
+
+#### Benefits of This Workflow:
+- **Code review** - All changes are reviewed before merging
+- **Clean history** - Squash merges keep main branch clean
+- **Rollback capability** - Easy to revert problematic changes
+- **Collaboration** - Multiple people can work on features safely
+- **CI/CD integration** - Automated testing on PRs before merge
+
 ## Repository Structure Overview
 
 ```mermaid
