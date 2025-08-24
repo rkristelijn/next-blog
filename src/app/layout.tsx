@@ -41,9 +41,19 @@ export default function RootLayout({
                     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                     mode = prefersDark ? 'dark' : 'light';
                   }
+                  // Remove any existing theme classes first
+                  document.documentElement.classList.remove('mui-light', 'mui-dark');
+                  // Add the correct theme class
                   document.documentElement.classList.add('mui-' + mode);
+                  // Store the theme in a global variable for immediate access
+                  window.__THEME_MODE__ = mode;
+                  // Set data attribute for MUI CSS variables
+                  document.documentElement.setAttribute('data-mui-color-scheme', mode);
                 } catch (e) {
+                  document.documentElement.classList.remove('mui-light', 'mui-dark');
                   document.documentElement.classList.add('mui-light');
+                  document.documentElement.setAttribute('data-mui-color-scheme', 'light');
+                  window.__THEME_MODE__ = 'light';
                 }
               })();
             `,

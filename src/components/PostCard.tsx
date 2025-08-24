@@ -6,8 +6,11 @@
  * across different parts of the application.
  */
 
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Stack } from '@mui/material';
 import type { PostCardProps } from '@/types';
 
 /**
@@ -16,28 +19,46 @@ import type { PostCardProps } from '@/types';
  * @param post - The post data to display
  */
 export default function PostCard({ post }: PostCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if clicking on a link
+    if ((e.target as HTMLElement).tagName === 'A') {
+      return;
+    }
+    
+    router.push(`/posts/${post.slug}`);
+  };
+
   return (
-    <Card sx={{ 
-      transition: 'box-shadow 0.2s ease',
-      '&:hover': {
-        boxShadow: 4
-      }
-    }}>
+    <Card 
+      onClick={handleCardClick}
+      sx={{ 
+        transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+        cursor: 'pointer',
+        '&:hover': {
+          boxShadow: 4,
+          transform: 'translateY(-2px)'
+        }
+      }}
+    >
       <CardContent>
         <Typography variant="h5" component="h2" gutterBottom>
-          <Box
-            component={Link}
+          <Link
             href={`/posts/${post.slug}`}
-            sx={{ 
+            style={{ 
               color: 'inherit', 
-              textDecoration: 'none',
-              '&:hover': {
-                color: 'primary.main'
-              }
+              textDecoration: 'none'
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLElement).style.color = 'var(--mui-palette-primary-main)';
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLElement).style.color = 'inherit';
             }}
           >
             {post.title}
-          </Box>
+          </Link>
         </Typography>
         <Typography color="text.secondary" paragraph>
           {post.excerpt}

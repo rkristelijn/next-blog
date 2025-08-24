@@ -1,25 +1,12 @@
 'use client';
 
-/**
- * PostContent component - renders blog post content with markdown support
- * 
- * This component handles the rendering of post content with proper styling
- * for markdown elements. It encapsulates the markdown rendering logic
- * and provides consistent styling across all blog posts.
- * 
- * Supports both regular markdown and MDX content from frontmatter.
- * Includes Mermaid diagram support for code blocks with language "mermaid".
- * Includes GitHub Flavored Markdown support for tables, strikethrough, etc.
- * Includes syntax highlighting for code blocks using react-syntax-highlighter.
- */
-
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Typography, Box, Stack, useTheme } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 import type { PostContentProps } from '@/types';
 import Mermaid from './Mermaid';
+import CodeBlock from './CodeBlock';
 
 /**
  * PostContent component for rendering blog post content
@@ -27,8 +14,7 @@ import Mermaid from './Mermaid';
  * @param post - The post containing the content to render
  */
 export default function PostContent({ post }: PostContentProps) {
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === 'dark';
+  // Remove unused mode variable since we now use CodeBlock component
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -104,33 +90,15 @@ export default function PostContent({ post }: PostContentProps) {
                 return <Mermaid chart={String(children).replace(/\n$/, '')} />;
               }
               
-              // Handle code blocks with syntax highlighting
-              if (match) {
+              // Check if this is a multi-line code block (has newlines)
+              const isMultiLine = String(children).includes('\n');
+              
+              // Handle code blocks with or without syntax highlighting
+              if (match || isMultiLine) {
                 return (
-                  <Box 
-                    className="syntax-highlighter-container"
-                    sx={{ mb: 2 }}
-                  >
-                    <SyntaxHighlighter
-                      style={isDarkMode ? oneDark : oneLight}
-                      language={language}
-                      PreTag="div"
-                      showLineNumbers={true}
-                      wrapLines={true}
-                      customStyle={{
-                        margin: 0,
-                        fontSize: '0.875rem',
-                        lineHeight: '1.5'
-                      }}
-                      codeTagProps={{
-                        style: {
-                          fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
-                        }
-                      }}
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                  </Box>
+                  <CodeBlock language={language || 'text'}>
+                    {String(children).replace(/\n$/, '')}
+                  </CodeBlock>
                 );
               }
               

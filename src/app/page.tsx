@@ -18,7 +18,7 @@ export default function Home() {
       flexDirection: 'column',
       backgroundColor: 'background.default'
     }}>
-      <Header title="Next.js Blog" showBlogPostsButton={true} />
+      <Header title="Next.js Blog" />
       <Hero />
       <Features />
       <Footer />

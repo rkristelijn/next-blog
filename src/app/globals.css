@@ -13,17 +13,33 @@ html.mui-dark {
 .syntax-highlighter-container {
   border-radius: 0.5rem;
   overflow: hidden;
+  background: var(--syntax-bg-color) !important;
 }
 
 .syntax-highlighter-container pre {
   margin: 0 !important;
   padding: 1rem !important;
   border-radius: 0.5rem;
+  background: var(--syntax-bg-color) !important;
 }
 
 .syntax-highlighter-container code {
   display: block !important;
   width: 100% !important;
+  background: transparent !important;
+}
+
+/* Force transparent background on ALL elements inside syntax highlighter */
+.syntax-highlighter-container * {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* But keep the container and pre backgrounds */
+.syntax-highlighter-container,
+.syntax-highlighter-container pre {
+  background: var(--syntax-bg-color) !important;
+  background-color: var(--syntax-bg-color) !important;
 }
 
 /* Each line should be a block but content within should be inline */
@@ -92,6 +108,7 @@ body {
   --mui-palette-background-paper: #ffffff;
   --mui-palette-text-primary: rgba(0, 0, 0, 0.87);
   --mui-palette-text-secondary: rgba(0, 0, 0, 0.6);
+  --syntax-bg-color: #fafafa; /* Light theme syntax background */
 }
 
 html.mui-dark {
@@ -107,4 +124,5 @@ html.mui-dark {
   --mui-palette-background-paper: #1e1e1e;
   --mui-palette-text-primary: #ffffff;
   --mui-palette-text-secondary: rgba(255, 255, 255, 0.7);
+  --syntax-bg-color: #1e1e1e; /* Dark theme syntax background */
 } 

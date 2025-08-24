@@ -38,30 +38,42 @@ const loadPostContent = async (slug: string): Promise<string> => {
   try {
     // Import content dynamically
     const contentModule = await import(`@/data/content/${slug}.json`);
-    const content = contentModule.content || '';
+    const content = contentModule.content || contentModule.default?.content || '';
     
     // Cache the content
     contentCache.set(slug, content);
     return content;
   } catch (error) {
     console.error(`Error loading content for ${slug}:`, error);
-    return '';
+    
+    // Return empty content instead of throwing
+    // This allows the page to render without content rather than crashing
+    const fallbackContent = `# ${slug}\n\nContent could not be loaded. Please try refreshing the page.`;
+    contentCache.set(slug, fallbackContent);
+    return fallbackContent;
   }
 }
 
 /**
  * Get all blog posts from static data (metadata only for performance)
- * @returns Array of all posts with metadata (content excluded)
+ * @returns Array of all posts with metadata (content excluded), sorted by date (newest first)
  */
 export const getAllPosts = (): Omit<Post, 'content'>[] => {
-  return (postsMetadata.posts as PostMetadata[]).map(post => ({
-    id: post.id,
-    slug: post.slug,
-    title: post.title,
-    date: post.date,
-    author: post.author,
-    excerpt: post.excerpt,
-  }));
+  return (postsMetadata.posts as PostMetadata[])
+    .map(post => ({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      date: post.date,
+      author: post.author,
+      excerpt: post.excerpt,
+    }))
+    .sort((a, b) => {
+      // Sort by date, newest first
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
 }
 
 /**

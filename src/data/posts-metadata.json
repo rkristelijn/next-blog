@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "id": "22-fixing-fouc-hydration-mismatch",
+      "slug": "fixing-fouc-and-hydration-mismatch-the-rtfm-violation-that-breaks-user-experience",
+      "title": "Fixing FOUC and Hydration Mismatch: The RTFM Violation That Breaks User Experience",
+      "excerpt": "How we solved the Flash of Unstyled Content (FOUC) problem in our Next.js blog with Material-UI theme switching. A deep dive into hydration mismatch, server-client synchronization, and the importance of reading the fine manual.",
+      "date": "2025-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "22-fixing-fouc-hydration-mismatch.mdx"
+    },
+    {
       "id": "01-creating-nextjs-project",
       "slug": "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
       "title": "Creating a Next.js Project with OpenNext for Easy Cloudflare Deployment",
@@ -191,6 +200,7 @@
     }
   ],
   "slugs": [
+    "fixing-fouc-and-hydration-mismatch-the-rtfm-violation-that-breaks-user-experience",
     "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
     "automated-deployment-with-github-actions-and-cloudflare-pages",
     "adding-mdx-functionality-to-your-nextjs-blog",
@@ -213,5 +223,5 @@
     "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization",
     "bare-minimum-principles-writing-better-react-components"
   ],
-  "generatedAt": "2025-08-24T17:32:10.317Z"
+  "generatedAt": "2025-08-24T18:21:38.198Z"
 }

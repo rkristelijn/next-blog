@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Container, Box } from '@mui/material';
-import Navigation from '@/components/Navigation';
+import Header from '@/components/Header';
 import PostContent from '@/components/PostContent';
 import { getPostBySlug, getPostMetaBySlug, getAllPostSlugs } from '@/lib/posts-static';
 import type { PostPageProps } from '@/types';
@@ -52,21 +52,35 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
  * Uses optimized static data to avoid Worker resource limits.
  */
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params;
-  // Load full post with content
-  const post = await getPostBySlug(slug);
+  try {
+    const { slug } = await params;
+    console.log('Loading post with slug:', slug);
+    
+    // Load full post with content
+    const post = await getPostBySlug(slug);
 
-  if (!post) {
+    if (!post) {
+      console.log('Post not found for slug:', slug);
+      notFound();
+    }
+
+    const breadcrumbs = [
+      { label: 'Home', href: '/' },
+      { label: 'Blog Posts', href: '/posts' },
+      { label: post.title }
+    ];
+
+    return (
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header breadcrumbs={breadcrumbs} />
+
+        <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
+          <PostContent post={post} />
+        </Container>
+      </Box>
+    );
+  } catch (error) {
+    console.error('Error in PostPage:', error);
     notFound();
   }
-
-  return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navigation title={post.title} showHome={true} showBack={true} />
-
-      <Container maxWidth="md" sx={{ flex: 1, py: 4 }}>
-        <PostContent post={post} />
-      </Container>
-    </Box>
-  );
 } 
