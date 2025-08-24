@@ -1,13 +1,10 @@
 import type { NextConfig } from "next";
 
 /**
- * Next.js configuration optimized for Cloudflare deployment
- * 
- * This configuration follows the RTFM principle by using
- * Next.js conventions and the KISS principle by keeping
- * configuration simple and focused.
+ * Next.js configuration optimized for Cloudflare Pages deployment
  */
 const nextConfig: NextConfig = {
+  output: "export",
   trailingSlash: true,
   images: {
     unoptimized: true
@@ -15,7 +12,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
-// added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
-initOpenNextCloudflareForDev();

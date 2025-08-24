@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -6,53 +6,7 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run TypeScript type checking
-        run: npx tsc --noEmit
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate posts data
-        run: node scripts/generate-posts-data.js
-
-      - name: Run tests
-        run: npm run test:run
-
-      - name: Run diagnostics
-        run: npm run diagnose
-
   deploy:
-    needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,42 +21,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate posts data
+      - name: Generate and optimize posts data
         run: |
-          echo "🔄 Regenerating posts.json with latest content..."
+          echo "🔄 Generating posts data..."
           node scripts/generate-posts-data.js
-          echo "✅ Posts data regenerated successfully!"
+          node scripts/optimize-for-workers.js
+          node scripts/cleanup-for-workers.js
+          echo "✅ Posts optimization completed!"
 
-      - name: Build project
-        run: npm run ci:build
-
-      - name: Aggressive Worker optimization
+      - name: Build for static export
         run: |
-          echo "⚡ Running aggressive Cloudflare Workers optimization..."
-          node scripts/aggressive-worker-optimization.js
-          echo "✅ Aggressive optimization completed!"
+          echo "🏗️ Building for static export..."
+          npm run build
+          echo "✅ Build completed!"
 
-      - name: Check if Cloudflare Worker exists
-        id: check-worker
-        run: |
-          # Check if the worker exists by trying a dry-run deployment
-          if npx wrangler deploy --dry-run 2>&1 | grep -q "No deployments found\|Worker not found"; then
-            echo "worker_exists=false" >> $GITHUB_OUTPUT
-            echo "⚠️ Cloudflare Worker 'next-blog' does not exist, will create it on first deployment"
-          else
-            echo "worker_exists=true" >> $GITHUB_OUTPUT
-            echo "✅ Cloudflare Worker 'next-blog' already exists"
-          fi
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - name: Deploy to Cloudflare Workers
-        run: |
-          echo "🚀 Deploying to Cloudflare Workers..."
-          # Deploy with automatic workers.dev subdomain registration
-          npx wrangler deploy --compatibility-date 2025-03-01
-          echo "✅ Deployment completed successfully!"
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} 
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: next-blog
+          directory: out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
