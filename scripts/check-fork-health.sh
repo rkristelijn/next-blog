@@ -76,8 +76,11 @@ check_fork() {
     if [ ! -z "$last_commit_date" ]; then
         echo "📅 Last activity: $last_commit_date"
         
-        # Check if it's been more than 30 days
-        local days_ago=$(( ($(date +%s) - $(date -d "$last_commit_date" +%s)) / 86400 ))
+        # Check if it's been more than 30 days (cross-platform compatible)
+        local commit_timestamp=$(git log -1 --format="%ct" $fork_owner/main 2>/dev/null)
+        local current_timestamp=$(date +%s)
+        local days_ago=$(( (current_timestamp - commit_timestamp) / 86400 ))
+        
         if [ "$days_ago" -gt 30 ]; then
             echo -e "  ${YELLOW}⚠️  No activity for $days_ago days${NC}"
         else
