@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * PostContent component - renders blog post content with markdown support
  * 
@@ -8,11 +10,14 @@
  * Supports both regular markdown and MDX content from frontmatter.
  * Includes Mermaid diagram support for code blocks with language "mermaid".
  * Includes GitHub Flavored Markdown support for tables, strikethrough, etc.
+ * Includes syntax highlighting for code blocks using react-syntax-highlighter.
  */
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Typography, Box, Stack } from '@mui/material';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Typography, Box, Stack, useTheme } from '@mui/material';
 import type { PostContentProps } from '@/types';
 import Mermaid from './Mermaid';
 
@@ -22,6 +27,9 @@ import Mermaid from './Mermaid';
  * @param post - The post containing the content to render
  */
 export default function PostContent({ post }: PostContentProps) {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
+
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h3" component="h1" gutterBottom>
@@ -48,21 +56,6 @@ export default function PostContent({ post }: PostContentProps) {
           borderRadius: '0.25rem',
           fontFamily: 'monospace',
           fontSize: '0.875rem'
-        },
-        '& pre': {
-          backgroundColor: 'background.paper',
-          border: 1,
-          borderColor: 'divider',
-          padding: '1rem',
-          borderRadius: '0.5rem',
-          overflow: 'auto',
-          mb: 1.5,
-          '& code': {
-            backgroundColor: 'transparent',
-            padding: 0,
-            borderRadius: 0,
-            color: 'text.primary'
-          }
         },
         // Table styling
         '& table': {
@@ -96,13 +89,17 @@ export default function PostContent({ post }: PostContentProps) {
         '& th:not(:last-child), & td:not(:last-child)': {
           borderRight: 1,
           borderColor: 'divider'
+        },
+        // Syntax highlighter overrides
+        '& .react-syntax-highlighter-line-number': {
+          color: 'text.secondary !important'
         }
       }}>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
             code(props) {
-              const { className, children } = props;
+              const { className, children, ...rest } = props;
               const match = /language-(\w+)/.exec(className || '');
               const language = match ? match[1] : '';
               
@@ -111,9 +108,42 @@ export default function PostContent({ post }: PostContentProps) {
                 return <Mermaid chart={String(children).replace(/\n$/, '')} />;
               }
               
-              // Regular code blocks and inline code
+              // Handle code blocks with syntax highlighting
+              if (match) {
+                return (
+                  <Box sx={{ mb: 2, '& pre': { margin: '0 !important' } }}>
+                    <SyntaxHighlighter
+                      style={isDarkMode ? oneDark : oneLight}
+                      language={language}
+                      PreTag="div"
+                      showLineNumbers={true}
+                      lineNumberStyle={{
+                        minWidth: '3em',
+                        paddingRight: '1em',
+                        textAlign: 'right',
+                        userSelect: 'none'
+                      }}
+                      customStyle={{
+                        margin: 0,
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        lineHeight: '1.5'
+                      }}
+                      codeTagProps={{
+                        style: {
+                          fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                        }
+                      }}
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  </Box>
+                );
+              }
+              
+              // Handle inline code
               return (
-                <code className={className}>
+                <code className={className} {...rest}>
                   {children}
                 </code>
               );

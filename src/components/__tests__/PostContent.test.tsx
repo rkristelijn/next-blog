@@ -15,6 +15,20 @@ vi.mock('../Mermaid', () => ({
   ),
 }));
 
+// Mock react-syntax-highlighter to avoid complex rendering in tests
+vi.mock('react-syntax-highlighter', () => ({
+  Prism: ({ children, language }: { children: string; language: string }) => (
+    <div data-testid="syntax-highlighter" data-language={language}>
+      {children}
+    </div>
+  ),
+}));
+
+vi.mock('react-syntax-highlighter/dist/esm/styles/prism', () => ({
+  oneDark: {},
+  oneLight: {},
+}));
+
 const mockPost: Post = {
   id: 'test-post',
   slug: 'test-post',
@@ -37,7 +51,12 @@ This is a test post with various markdown elements.
 
 \`\`\`javascript
 console.log('Hello, world!');
+const greeting = 'Hello, syntax highlighting!';
 \`\`\`
+
+## Inline Code Test
+
+Here is some \`inline code\` in a paragraph.
 
 ## Mermaid Test
 
@@ -92,11 +111,22 @@ describe('PostContent', () => {
     expect(screen.getByText('Row 2 Col 2')).toBeInTheDocument();
   });
 
-  it('renders code blocks correctly', () => {
+  it('renders code blocks with syntax highlighting', () => {
     renderWithTheme(<PostContent post={mockPost} />);
     
-    // Check if code content is rendered
-    expect(screen.getByText("console.log('Hello, world!');")).toBeInTheDocument();
+    // Check if syntax highlighter is used for code blocks
+    const syntaxHighlighter = screen.getByTestId('syntax-highlighter');
+    expect(syntaxHighlighter).toBeInTheDocument();
+    expect(syntaxHighlighter).toHaveAttribute('data-language', 'javascript');
+    expect(syntaxHighlighter).toHaveTextContent("console.log('Hello, world!')");
+    expect(syntaxHighlighter).toHaveTextContent("const greeting = 'Hello, syntax highlighting!'");
+  });
+
+  it('renders inline code correctly', () => {
+    renderWithTheme(<PostContent post={mockPost} />);
+    
+    // Check if inline code is rendered (not through syntax highlighter)
+    expect(screen.getByText('inline code')).toBeInTheDocument();
   });
 
   it('renders Mermaid diagrams correctly', () => {
@@ -147,5 +177,18 @@ describe('PostContent', () => {
     renderWithTheme(<PostContent post={textOnlyPost} />);
     
     expect(screen.getByText('This is just plain text content without any markdown.')).toBeInTheDocument();
+  });
+
+  it('handles posts with only inline code', () => {
+    const inlineCodePost: Post = {
+      ...mockPost,
+      content: 'Here is some `inline code` without language specification.',
+    };
+    
+    renderWithTheme(<PostContent post={inlineCodePost} />);
+    
+    expect(screen.getByText('inline code')).toBeInTheDocument();
+    // Should not use syntax highlighter for inline code
+    expect(screen.queryByTestId('syntax-highlighter')).not.toBeInTheDocument();
   });
 });
