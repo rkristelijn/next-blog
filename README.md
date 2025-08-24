@@ -15,7 +15,7 @@ A modern, fast, and easy-to-use blog template built with Next.js 15, Material-UI
 
 ## 🎯 Demo
 
-**Live Demo**: https://next-blog.rkristelijn.workers.dev/
+**Live Demo**: https://next-blog-demo-mu6.pages.dev/
 
 ## 🚀 Performance Optimizations
 

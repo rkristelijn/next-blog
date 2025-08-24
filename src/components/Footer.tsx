@@ -25,7 +25,7 @@ export default function Footer() {
           <Stack direction="row" spacing={3} justifyContent="center" flexWrap="wrap">
             <Button
               startIcon={<LaunchIcon />}
-              href="https://next-blog.rkristelijn.workers.dev"
+              href="https://next-blog-demo-mu6.pages.dev"
               target="_blank"
               rel="noopener noreferrer"
               color="inherit"

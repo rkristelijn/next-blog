@@ -206,6 +206,15 @@
       "date": "2024-08-24",
       "author": "Roel Kristelijn",
       "originalFilename": "21-bare-minimum-principles-react-components.mdx"
+    },
+    {
+      "id": "24-from-opennext-workers-to-cloudflare-pages",
+      "slug": "from-opennext-workers-to-cloudflare-pages-when-bundle-size-forces-architecture-decisions",
+      "title": "From OpenNext Workers to Cloudflare Pages: When Bundle Size Forces Architecture Decisions",
+      "excerpt": "How a 14.5MB bundle size issue led us from OpenNext Cloudflare Workers to static Cloudflare Pages deployment, and why sometimes simpler is better.",
+      "date": "2024-08-24",
+      "author": "Roel Kristelijn",
+      "originalFilename": "24-from-opennext-workers-to-cloudflare-pages.mdx"
     }
   ],
   "slugs": [
@@ -231,7 +240,8 @@
     "testing-mermaid-diagrams-in-blog-posts",
     "code-quality-analysis-from-template-to-production-ready-platform",
     "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization",
-    "bare-minimum-principles-writing-better-react-components"
+    "bare-minimum-principles-writing-better-react-components",
+    "from-opennext-workers-to-cloudflare-pages-when-bundle-size-forces-architecture-decisions"
   ],
-  "generatedAt": "2025-08-24T19:08:08.011Z"
+  "generatedAt": "2025-08-24T19:14:41.157Z"
 }

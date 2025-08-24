@@ -1,0 +1,177 @@
+---
+title: "From OpenNext Workers to Cloudflare Pages: When Bundle Size Forces Architecture Decisions"
+date: "2024-08-24"
+author: "Roel Kristelijn"
+excerpt: "How a 14.5MB bundle size issue led us from OpenNext Cloudflare Workers to static Cloudflare Pages deployment, and why sometimes simpler is better."
+---
+
+# From OpenNext Workers to Cloudflare Pages: When Bundle Size Forces Architecture Decisions
+
+Sometimes the best architectural decisions are forced upon you by constraints. Today I experienced exactly that when our Next.js blog deployment failed due to Cloudflare Workers' 3MB bundle size limit.
+
+## The Problem: Bundle Size Explosion
+
+Our blog was using `@opennextjs/cloudflare` to deploy a full Next.js application to Cloudflare Workers. Everything worked fine until we hit this error:
+
+```bash
+▲ [WARNING] Here are the 5 largest dependencies included in your script:
+  - .open-next/server-functions/default/handler.mjs - 14572.76 KiB
+  - .open-next/middleware/handler.mjs - 104.43 KiB
+  - .open-next/.build/durable-objects/queue.js - 12.16 KiB
+
+✘ [ERROR] Your Worker exceeded the size limit of 3 MiB. 
+  Please upgrade to a paid plan to deploy Workers up to 10 MiB.
+```
+
+**14.5MB** for a simple blog? That's when you know something went wrong.
+
+## The Root Cause
+
+The issue wasn't with our content optimization (we already had a 95.2% bundle size reduction system in place). The problem was that `opennextjs-cloudflare` bundles the entire Next.js runtime, React, Material-UI, and all dependencies into a single Worker script.
+
+For a blog with 23 posts, this created a massive bundle that included:
+- Full Next.js server runtime
+- Complete React SSR capabilities  
+- Material-UI component library
+- All our optimized content (even though split)
+- Various polyfills and Node.js compatibility layers
+
+## The Solution: Back to Basics
+
+Instead of fighting the bundle size, we switched to a fundamentally different approach:
+
+### Before (OpenNext Workers):
+```bash
+# Complex build process
+opennextjs-cloudflare build    # Creates 14.5MB Worker bundle
+opennextjs-cloudflare deploy   # Deploys to Workers
+
+# Result: Dynamic SSR app with 3MB limit
+```
+
+### After (Cloudflare Pages):
+```bash
+# Simple build process  
+next build                     # Static export
+wrangler pages deploy out      # Deploy static files
+
+# Result: Static site with no limits
+```
+
+## Configuration Changes
+
+The migration was surprisingly simple:
+
+**package.json updates:**
+```json
+{
+  "scripts": {
+    "deploy": "npm run build && npx wrangler pages deploy out --project-name=next-blog-demo",
+    "preview": "npm run build && npx wrangler pages dev out --port=3001"
+  }
+}
+```
+
+**wrangler.jsonc for Pages:**
+```json
+{
+  "name": "next-blog-demo",
+  "pages_build_output_dir": "out",
+  "compatibility_date": "2025-03-01"
+}
+```
+
+**next.config.ts (already had this):**
+```typescript
+const nextConfig: NextConfig = {
+  output: "export",        // Static export
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
+};
+```
+
+## What We Lost vs. What We Gained
+
+### Lost:
+- **Server-side rendering** - Everything is now pre-built
+- **API routes** - No `/api/*` endpoints  
+- **Dynamic imports** - All content is static
+- **Real-time features** - No server-side logic
+
+### Gained:
+- **No size limits** - Can scale to hundreds of posts
+- **Better performance** - Static files served from CDN
+- **Simpler deployment** - No Worker complexity
+- **Lower costs** - Pages is free for static sites
+- **Higher reliability** - No Worker resource limits
+
+## Performance Comparison
+
+| Metric | OpenNext Workers | Cloudflare Pages |
+|--------|------------------|------------------|
+| **Bundle Size** | 14.5MB (failed) | 149 files, ~3MB total |
+| **Cold Start** | ~100-500ms | 0ms (static) |
+| **TTFB** | Variable | <50ms (CDN) |
+| **Scalability** | Limited by Worker | Unlimited |
+| **Cost** | Worker requests | Free |
+
+## The Irony
+
+The ironic part? Our blog was already optimized for static deployment:
+
+- **Content splitting**: Metadata vs. full content
+- **On-demand loading**: Only load what's needed
+- **95.2% size reduction**: From 240KB to 11.6KB metadata
+
+All this optimization was designed for Workers, but it works even better with static deployment!
+
+## When to Use Each Approach
+
+### Use OpenNext Workers when you need:
+- Server-side rendering
+- API routes
+- Real-time data
+- User authentication
+- Dynamic content per request
+
+### Use Cloudflare Pages when you have:
+- Static or mostly static content
+- Content-driven sites (blogs, docs)
+- Performance as top priority
+- Simple deployment requirements
+
+## Lessons Learned
+
+1. **Constraints drive innovation** - The 3MB limit forced us to find a better solution
+2. **Simpler is often better** - Static deployment is faster and more reliable
+3. **Know your use case** - A blog doesn't need server-side complexity
+4. **Bundle analysis matters** - Always check what you're actually deploying
+
+## The Result
+
+Our blog is now live at: **https://next-blog-demo-mu6.pages.dev/**
+
+- ✅ Faster loading times
+- ✅ No size constraints  
+- ✅ Simpler deployment pipeline
+- ✅ Better reliability
+- ✅ Lower complexity
+
+Sometimes the best architectural decision is the one that removes complexity rather than adding it.
+
+## Next Steps
+
+While this solution works perfectly for our blog, we're considering:
+
+1. **Hybrid approach** - Pages for content, Workers for APIs
+2. **Custom domain** - Moving from the demo URL
+3. **GitHub Actions integration** - Automated deployments
+4. **Performance monitoring** - Measuring the improvements
+
+The moral of the story? When you hit a wall, sometimes the best path forward is to step back and choose a different route entirely.
+
+---
+
+*Have you faced similar bundle size issues? How did you solve them? Share your experiences in the comments below!*

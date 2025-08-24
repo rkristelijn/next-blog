@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/rkristelijn/next-blog.git"
 	},
-	"homepage": "https://next-blog.rkristelijn.workers.dev",
+	"homepage": "https://next-blog-demo-mu6.pages.dev",
 	"scripts": {
 		"predev": "node scripts/ensure-dev-files.js",
 		"dev": "next dev --turbopack",
