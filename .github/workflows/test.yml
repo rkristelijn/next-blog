@@ -47,7 +47,7 @@ jobs:
         run: node scripts/generate-posts-data.js
 
       - name: Run tests
-        run: npm run test:run
+        run: npm run ci:test
 
       - name: Run diagnostics
         run: npm run diagnose

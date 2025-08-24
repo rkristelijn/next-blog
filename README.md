@@ -17,6 +17,36 @@ A modern, fast, and easy-to-use blog template built with Next.js 15, Material-UI
 
 **Live Demo**: https://next-blog.rkristelijn.workers.dev/
 
+## 🚀 Performance Optimizations
+
+### Cloudflare Worker Resource Optimization
+
+This blog is optimized for Cloudflare Workers with advanced performance features:
+
+- **95.2% bundle size reduction** (240KB → 11.6KB metadata)
+- **Lazy loading architecture** - Content loaded on-demand
+- **Intelligent caching** - Frequently accessed content cached in memory
+- **Zero Error 1102** - Stays within Worker resource limits
+
+#### How It Works
+
+```
+Traditional Approach:          Optimized Approach:
+┌─────────────────┐           ┌──────────────┐  ┌─────────────────┐
+│   posts.json    │           │ metadata.json│  │   content/      │
+│     240KB       │    →      │    11.6KB    │  │ individual files│
+│  (all content)  │           │ (summaries)  │  │ (on-demand)     │
+└─────────────────┘           └──────────────┘  └─────────────────┘
+```
+
+**Benefits:**
+- ⚡ **Faster startup** - Small initial bundle
+- 🧠 **Lower memory usage** - Only load what you need
+- 📈 **Linear scalability** - Handles hundreds of posts efficiently
+- 🔄 **Smart caching** - Repeat requests served from cache
+
+Read the full technical deep dive: [Solving Cloudflare Worker Resource Limits](https://next-blog.rkristelijn.workers.dev/posts/solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization)
+
 ## 🚀 Quick Start for Users
 
 ### 1. Fork this Repository

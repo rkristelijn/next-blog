@@ -6,11 +6,52 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, vi } from 'vitest';
+
+// Store original console methods
+const originalConsole = {
+  error: console.error,
+  warn: console.warn,
+  log: console.log,
+};
+
+// Mock console methods to suppress noisy output during tests
+beforeEach(() => {
+  // Suppress console.error for Mermaid rendering errors and other test noise
+  console.error = vi.fn((message, ...args) => {
+    // Only suppress specific known noisy messages
+    if (
+      typeof message === 'string' && 
+      (message.includes('Mermaid rendering error') ||
+       message.includes('Invalid syntax') ||
+       message.includes('Warning: ReactDOM.render'))
+    ) {
+      return;
+    }
+    // For other errors, still log them (useful for debugging real issues)
+    originalConsole.error(message, ...args);
+  });
+
+  // Optionally suppress warnings too
+  console.warn = vi.fn((message, ...args) => {
+    if (
+      typeof message === 'string' && 
+      (message.includes('Warning:') ||
+       message.includes('deprecated'))
+    ) {
+      return;
+    }
+    originalConsole.warn(message, ...args);
+  });
+});
 
 // Cleanup after each test
 afterEach(() => {
   cleanup();
+  // Restore original console methods
+  console.error = originalConsole.error;
+  console.warn = originalConsole.warn;
+  console.log = originalConsole.log;
 });
 
 // Mock Next.js router

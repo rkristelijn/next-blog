@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Container, Box } from '@mui/material';
 import Navigation from '@/components/Navigation';
 import PostContent from '@/components/PostContent';
-import { getPostBySlug, getAllPostSlugs } from '@/lib/posts-static';
+import { getPostBySlug, getPostMetaBySlug, getAllPostSlugs } from '@/lib/posts-static';
 import type { PostPageProps } from '@/types';
 import type { Metadata } from 'next';
 
@@ -27,7 +27,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  // Use metadata-only version for performance
+  const post = getPostMetaBySlug(slug);
   
   if (!post) {
     return {
@@ -48,11 +49,12 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
  * and proper error handling. It also follows the HIPI principle by hiding
  * data fetching logic behind clean interfaces.
  * 
- * Uses static data to avoid runtime file system operations.
+ * Uses optimized static data to avoid Worker resource limits.
  */
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  // Load full post with content
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();

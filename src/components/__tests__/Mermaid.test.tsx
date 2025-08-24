@@ -38,12 +38,23 @@ describe('Mermaid', () => {
     const mockRender = vi.mocked(mermaid.render);
     mockRender.mockRejectedValue(new Error('Invalid syntax'));
 
+    // Spy on console.error to verify it's called
+    const consoleSpy = vi.spyOn(console, 'error');
+
     render(<Mermaid chart="invalid chart" />);
 
     await waitFor(() => {
       expect(screen.getByText(/Mermaid Rendering Error/)).toBeInTheDocument();
       expect(screen.getByText(/Invalid syntax/)).toBeInTheDocument();
     });
+
+    // Verify console.error was called (but suppressed by our mock)
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Mermaid rendering error:',
+      expect.any(Error)
+    );
+
+    consoleSpy.mockRestore();
   });
 
   it('uses custom id when provided', async () => {

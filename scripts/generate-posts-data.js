@@ -27,6 +27,23 @@ function createSlug(text) {
     .replace(/-+$/, '');            // Trim hyphens from end
 }
 
+/**
+ * Compress content by removing excessive whitespace and comments
+ * @param {string} content - The content to compress
+ * @returns {string} - Compressed content
+ */
+function compressContent(content) {
+  return content
+    // Remove HTML comments
+    .replace(/<!--[\s\S]*?-->/g, '')
+    // Remove excessive whitespace but preserve line breaks for readability
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    // Remove trailing whitespace from lines
+    .replace(/[ \t]+$/gm, '')
+    // Remove leading/trailing whitespace
+    .trim();
+}
+
 function generatePostsData() {
   try {
     console.log('Generating posts data...');
@@ -51,7 +68,7 @@ function generatePostsData() {
         date: data.date,
         author: data.author,
         excerpt: data.excerpt,
-        content,
+        content: compressContent(content), // Compress content to reduce size
         originalFilename: fileName  // Keep track of original filename
       };
     }).filter(post => post.title && post.date && post.excerpt);

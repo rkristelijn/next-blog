@@ -19,7 +19,7 @@ export interface PostPageProps {
 export type PostsPageProps = Record<string, never>;
 
 export interface PostCardProps {
-  post: Post;
+  post: Omit<Post, 'content'> | Post;
 }
 
 export interface PostContentProps {

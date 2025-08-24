@@ -1,0 +1,207 @@
+{
+  "posts": [
+    {
+      "id": "01-creating-nextjs-project",
+      "slug": "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
+      "title": "Creating a Next.js Project with OpenNext for Easy Cloudflare Deployment",
+      "excerpt": "Learn how to create a Next.js project from scratch using OpenNext for seamless Cloudflare deployment. Step-by-step guide with all the commands and configuration needed.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "01-creating-nextjs-project.mdx"
+    },
+    {
+      "id": "02-github-actions-deployment",
+      "slug": "automated-deployment-with-github-actions-and-cloudflare-pages",
+      "title": "Automated Deployment with GitHub Actions and Cloudflare Pages",
+      "excerpt": "Set up continuous deployment for your Next.js blog using GitHub Actions and Cloudflare Pages. Learn how to automate your deployment pipeline for seamless updates.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "02-github-actions-deployment.mdx"
+    },
+    {
+      "id": "03-adding-mdx-functionality",
+      "slug": "adding-mdx-functionality-to-your-nextjs-blog",
+      "title": "Adding MDX Functionality to Your Next.js Blog",
+      "excerpt": "Learn how to integrate MDX into your Next.js blog for enhanced content creation. Add React components to your markdown and create dynamic, interactive blog posts.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "03-adding-mdx-functionality.mdx"
+    },
+    {
+      "id": "04-integrating-material-ui",
+      "slug": "integrating-material-ui-for-beautiful-consistent-design",
+      "title": "Integrating Material-UI for Beautiful, Consistent Design",
+      "excerpt": "Transform your Next.js blog with Material-UI. Learn how to replace basic HTML with beautiful, consistent UI components and create a professional design system.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "04-integrating-material-ui.mdx"
+    },
+    {
+      "id": "05-optimizing-code-quality",
+      "slug": "optimizing-code-quality-and-applying-best-practices",
+      "title": "Optimizing Code Quality and Applying Best Practices",
+      "excerpt": "Learn how to optimize your Next.js blog code by applying coding principles and best practices. Refactor components, improve type safety, and achieve 10/10 code quality.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "05-optimizing-code-quality.mdx"
+    },
+    {
+      "id": "06-ai-assisted-development",
+      "slug": "ai-assisted-development-how-cursor-enhanced-my-development-workflow",
+      "title": "AI-Assisted Development: How Cursor Enhanced My Development Workflow",
+      "excerpt": "Discover how I built this entire blog using Cursor's AI capabilities. Learn why AI doesn't replace developers but makes them more efficient, and why you still need strong development skills.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "06-ai-assisted-development.mdx"
+    },
+    {
+      "id": "07-next-steps",
+      "slug": "next-steps-enhancing-your-nextjs-blog-with-advanced-features",
+      "title": "Next Steps: Enhancing Your Next.js Blog with Advanced Features",
+      "excerpt": "Explore the next steps to enhance your Next.js blog with image support, search functionality, customizable content, and WCAG 2.2 AA compliance. Plan your blog's evolution.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "07-next-steps.mdx"
+    },
+    {
+      "id": "08-architecture-overview",
+      "slug": "architecture-overview-building-a-scalable-nextjs-blog",
+      "title": "Architecture Overview: Building a Scalable Next.js Blog",
+      "excerpt": "Explore the architecture behind our Next.js blog. Learn about our technology choices, component design, data flow, and how everything works together to create a performant, maintainable application.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "08-architecture-overview.mdx"
+    },
+    {
+      "id": "09-user-guide",
+      "slug": "user-guide-how-to-use-and-navigate-your-nextjs-blog",
+      "title": "User Guide: How to Use and Navigate Your Next.js Blog",
+      "excerpt": "A comprehensive user guide for your Next.js blog. Learn how to navigate, read posts, and make the most of your blog's features and functionality.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "09-user-guide.mdx"
+    },
+    {
+      "id": "10-developer-guide",
+      "slug": "developer-guide-contributing-to-and-extending-your-nextjs-blog",
+      "title": "Developer Guide: Contributing to and Extending Your Next.js Blog",
+      "excerpt": "A comprehensive developer guide for extending and contributing to your Next.js blog. Learn about the codebase, development workflow, and how to add new features.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "10-developer-guide.mdx"
+    },
+    {
+      "id": "11-fixing-cloudflare-deployment",
+      "slug": "fixing-cloudflare-deployment-from-runtime-errors-to-static-site-generation",
+      "title": "Fixing Cloudflare Deployment: From Runtime Errors to Static Site Generation",
+      "excerpt": "How I solved the 'fs.readdirSync is not implemented' error by implementing proper static site generation for my Next.js blog on Cloudflare Workers.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "11-fixing-cloudflare-deployment.mdx"
+    },
+    {
+      "id": "12-fixing-dark-theme-implementation",
+      "slug": "fixing-dark-theme-implementation-in-nextjs-with-material-ui",
+      "title": "Fixing Dark Theme Implementation in Next.js with Material-UI",
+      "excerpt": "A deep dive into implementing proper dark theme support in a Next.js blog with Material-UI, covering common pitfalls, theme switching, and code block styling.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "12-fixing-dark-theme-implementation.mdx"
+    },
+    {
+      "id": "13-fixing-theme-flash-fouc",
+      "slug": "fixing-theme-flash-fouc-in-nextjs-with-material-ui-css-variables",
+      "title": "Fixing Theme Flash (FOUC) in Next.js with Material-UI CSS Variables",
+      "excerpt": "Learn how to eliminate the flash of unstyled content when switching between light and dark themes in a Next.js application using MUI's CSS theme variables.",
+      "date": "2025-07-21",
+      "author": "Remi Kristelijn",
+      "originalFilename": "13-fixing-theme-flash-fouc.mdx"
+    },
+    {
+      "id": "14-managing-open-source-forks",
+      "slug": "managing-open-source-forks-lessons-from-building-a-blog-template",
+      "title": "Managing Open Source Forks: Lessons from Building a Blog Template",
+      "excerpt": "How to handle contributions from community forks while maintaining a clean template repository - lessons learned from real-world fork management.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "14-managing-open-source-forks.mdx"
+    },
+    {
+      "id": "15-building-developer-tools-for-community",
+      "slug": "building-developer-tools-for-community-from-problem-to-solution",
+      "title": "Building Developer Tools for Community: From Problem to Solution",
+      "excerpt": "How we built diagnostic tools, troubleshooting guides, and automation scripts to support a growing community of blog template users.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "15-building-developer-tools-for-community.mdx"
+    },
+    {
+      "id": "16-multilingual-documentation-strategy",
+      "slug": "multilingual-documentation-strategy-supporting-global-communities",
+      "title": "Multilingual Documentation Strategy: Supporting Global Communities",
+      "excerpt": "How we developed a scalable approach to multilingual documentation that serves both international developers and local communities effectively.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "16-multilingual-documentation-strategy.mdx"
+    },
+    {
+      "id": "17-community-driven-development-lessons",
+      "slug": "community-driven-development-when-users-become-co-creators",
+      "title": "Community-Driven Development: When Users Become Co-Creators",
+      "excerpt": "How a simple blog template evolved into a comprehensive platform through community feedback, contributions, and real-world usage patterns.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "17-community-driven-development-lessons.mdx"
+    },
+    {
+      "id": "18-testing-mermaid-diagrams",
+      "slug": "testing-mermaid-diagrams-in-blog-posts",
+      "title": "Testing Mermaid Diagrams in Blog Posts",
+      "excerpt": "A test post to verify that Mermaid diagrams render correctly in our blog posts with proper theme support.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "18-testing-mermaid-diagrams.mdx"
+    },
+    {
+      "id": "19-code-quality-analysis-and-improvements",
+      "slug": "code-quality-analysis-from-template-to-production-ready-platform",
+      "title": "Code Quality Analysis: From Template to Production-Ready Platform",
+      "excerpt": "A comprehensive analysis of our Next.js blog template's code quality, identifying areas for improvement and implementing best practices for maintainability, testability, and scalability.",
+      "date": "2024-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "19-code-quality-analysis-and-improvements.mdx"
+    },
+    {
+      "id": "20-solving-cloudflare-worker-resource-limits",
+      "slug": "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization",
+      "title": "Solving Cloudflare Worker Resource Limits: A Deep Dive into Performance Optimization",
+      "excerpt": "How we solved Error 1102 'Worker exceeded resource limits' by implementing lazy loading and reducing bundle size by 95.2%. A technical deep dive with sequence diagrams, performance analysis, and lessons learned.",
+      "date": "2024-08-24",
+      "author": "Roel Kristelijn",
+      "originalFilename": "20-solving-cloudflare-worker-resource-limits.mdx"
+    }
+  ],
+  "slugs": [
+    "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
+    "automated-deployment-with-github-actions-and-cloudflare-pages",
+    "adding-mdx-functionality-to-your-nextjs-blog",
+    "integrating-material-ui-for-beautiful-consistent-design",
+    "optimizing-code-quality-and-applying-best-practices",
+    "ai-assisted-development-how-cursor-enhanced-my-development-workflow",
+    "next-steps-enhancing-your-nextjs-blog-with-advanced-features",
+    "architecture-overview-building-a-scalable-nextjs-blog",
+    "user-guide-how-to-use-and-navigate-your-nextjs-blog",
+    "developer-guide-contributing-to-and-extending-your-nextjs-blog",
+    "fixing-cloudflare-deployment-from-runtime-errors-to-static-site-generation",
+    "fixing-dark-theme-implementation-in-nextjs-with-material-ui",
+    "fixing-theme-flash-fouc-in-nextjs-with-material-ui-css-variables",
+    "managing-open-source-forks-lessons-from-building-a-blog-template",
+    "building-developer-tools-for-community-from-problem-to-solution",
+    "multilingual-documentation-strategy-supporting-global-communities",
+    "community-driven-development-when-users-become-co-creators",
+    "testing-mermaid-diagrams-in-blog-posts",
+    "code-quality-analysis-from-template-to-production-ready-platform",
+    "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization"
+  ],
+  "generatedAt": "2025-08-24T16:52:08.388Z"
+}

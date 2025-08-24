@@ -1,31 +1,116 @@
 /**
- * Static posts data layer - reads from pre-generated JSON file
+ * Static posts data layer - optimized for Cloudflare Workers
  * 
- * This module reads posts from a static JSON file generated at build time,
- * avoiding any runtime file system operations that aren't supported in
- * Cloudflare Workers environment.
+ * This module reads posts metadata from a lightweight JSON file and loads
+ * content on-demand to reduce memory usage and avoid Worker resource limits.
  */
 
 import type { Post } from '@/types';
 
-// Import the static data (this will be bundled at build time)
-import postsData from '@/data/posts.json';
+// Import the lightweight metadata (this will be bundled at build time)
+import postsMetadata from '@/data/posts-metadata.json';
+
+// Define the metadata post type
+interface PostMetadata {
+  id: string;
+  slug: string;
+  title: string;
+  date: string;
+  author: string;
+  excerpt: string;
+  originalFilename: string;
+}
+
+// Cache for loaded content to avoid re-loading
+const contentCache = new Map<string, string>();
 
 /**
- * Get all blog posts from static data
- * @returns Array of all posts with metadata
+ * Load content for a specific post on-demand
+ * @param slug - The post slug
+ * @returns The post content
  */
-export function getAllPosts(): Post[] {
-  return postsData.posts;
+async function loadPostContent(slug: string): Promise<string> {
+  // Check cache first
+  if (contentCache.has(slug)) {
+    return contentCache.get(slug)!;
+  }
+
+  try {
+    // Import content dynamically
+    const contentModule = await import(`@/data/content/${slug}.json`);
+    const content = contentModule.content || '';
+    
+    // Cache the content
+    contentCache.set(slug, content);
+    return content;
+  } catch (error) {
+    console.error(`Error loading content for ${slug}:`, error);
+    return '';
+  }
 }
 
 /**
- * Get a specific post by its slug
+ * Get all blog posts from static data (metadata only for performance)
+ * @returns Array of all posts with metadata (content excluded)
+ */
+export function getAllPosts(): Omit<Post, 'content'>[] {
+  return (postsMetadata.posts as PostMetadata[]).map(post => ({
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    author: post.author,
+    excerpt: post.excerpt,
+  }));
+}
+
+/**
+ * Get a specific post by its slug (with content loaded on-demand)
  * @param slug - The post slug to look up
  * @returns The post if found, undefined otherwise
  */
-export function getPostBySlug(slug: string): Post | undefined {
-  return postsData.posts.find((post: Post) => post.slug === slug);
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  const postMeta = (postsMetadata.posts as PostMetadata[]).find(post => post.slug === slug);
+  
+  if (!postMeta) {
+    return undefined;
+  }
+
+  // Load content on-demand
+  const content = await loadPostContent(slug);
+
+  return {
+    id: postMeta.id,
+    slug: postMeta.slug,
+    title: postMeta.title,
+    date: postMeta.date,
+    author: postMeta.author,
+    excerpt: postMeta.excerpt,
+    content,
+  };
+}
+
+/**
+ * Get a specific post metadata by its slug (synchronous, no content)
+ * Use this for metadata operations and when content is not needed
+ * @param slug - The post slug to look up
+ * @returns The post metadata if found, undefined otherwise
+ */
+export function getPostMetaBySlug(slug: string): Omit<Post, 'content'> | undefined {
+  const postMeta = (postsMetadata.posts as PostMetadata[]).find(post => post.slug === slug);
+  
+  if (!postMeta) {
+    return undefined;
+  }
+
+  return {
+    id: postMeta.id,
+    slug: postMeta.slug,
+    title: postMeta.title,
+    date: postMeta.date,
+    author: postMeta.author,
+    excerpt: postMeta.excerpt,
+  };
 }
 
 /**
@@ -33,7 +118,7 @@ export function getPostBySlug(slug: string): Post | undefined {
  * @returns Array of all post slugs
  */
 export function getAllPostSlugs(): string[] {
-  return postsData.slugs;
+  return postsMetadata.slugs;
 }
 
 /**
@@ -42,5 +127,5 @@ export function getAllPostSlugs(): string[] {
  * @returns True if the post exists, false otherwise
  */
 export function postExists(slug: string): boolean {
-  return postsData.slugs.includes(slug);
+  return postsMetadata.slugs.includes(slug);
 } 

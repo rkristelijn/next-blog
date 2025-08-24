@@ -10,7 +10,7 @@
 	"homepage": "https://next-blog.rkristelijn.workers.dev",
 	"scripts": {
 		"dev": "next dev --turbopack",
-		"prebuild": "node scripts/generate-posts-data.js",
+		"prebuild": "node scripts/generate-posts-data.js && node scripts/optimize-for-workers.js",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
@@ -27,6 +27,7 @@
 		"test:run": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest --watch",
+		"ci:test": "vitest run",
 		"pre-commit": "npm run lint && npm run test:run && npx tsc --noEmit",
 		"validate": "npm run pre-commit && npm run build"
 	},
