@@ -4,6 +4,13 @@ This documentation covers the architecture, setup, and development guidelines fo
 
 ## Table of Contents
 
+### For Users
+- [User Manual](USER-MANUAL.md) - Complete guide for blogging via GitHub web interface
+- [Easy Blogging Guide](EASY-BLOGGING.md) - Quick start guide for new users
+- [Web User Checklist](web-user-checklist.md) - Troubleshooting checklist in Dutch
+- [GitHub Actions Troubleshooting](troubleshooting-github-actions.md) - Fix deployment issues
+
+### For Developers
 - [Architecture Overview](architecture.md)
 - [Platform Rules](platform-rules.md)
 - [Architecture Rules](architecture-rules.md)
