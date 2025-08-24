@@ -73,14 +73,14 @@ jobs:
           node scripts/generate-posts-data.js
           echo "✅ Posts data regenerated successfully!"
 
-      - name: Optimize for Cloudflare Workers
-        run: |
-          echo "🔧 Optimizing for Cloudflare Workers..."
-          node scripts/optimize-for-workers.js
-          echo "✅ Worker optimization completed!"
-
       - name: Build project
         run: npm run ci:build
+
+      - name: Advanced Worker optimization
+        run: |
+          echo "🚀 Running advanced Cloudflare Workers optimization..."
+          node scripts/advanced-worker-optimization.js
+          echo "✅ Advanced optimization completed!"
 
       - name: Check if Cloudflare Worker exists
         id: check-worker
