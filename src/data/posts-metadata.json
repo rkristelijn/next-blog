@@ -10,6 +10,15 @@
       "originalFilename": "22-fixing-fouc-hydration-mismatch.mdx"
     },
     {
+      "id": "23-troubleshooting-cloudflare-workers-deployment",
+      "slug": "troubleshooting-cloudflare-workers-deployment-from-security-checks-to-bundle-size-optimization",
+      "title": "Troubleshooting Cloudflare Workers Deployment: From Security Checks to Bundle Size Optimization",
+      "excerpt": "A real-time troubleshooting session where we solved multiple deployment issues: YAML syntax errors in GitHub Actions, security check false positives, and aggressive bundle size optimization to get under the 3MB Cloudflare Workers limit.",
+      "date": "2025-08-24",
+      "author": "Remi Kristelijn",
+      "originalFilename": "23-troubleshooting-cloudflare-workers-deployment.mdx"
+    },
+    {
       "id": "01-creating-nextjs-project",
       "slug": "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
       "title": "Creating a Next.js Project with OpenNext for Easy Cloudflare Deployment",
@@ -201,6 +210,7 @@
   ],
   "slugs": [
     "fixing-fouc-and-hydration-mismatch-the-rtfm-violation-that-breaks-user-experience",
+    "troubleshooting-cloudflare-workers-deployment-from-security-checks-to-bundle-size-optimization",
     "creating-a-nextjs-project-with-opennext-for-easy-cloudflare-deployment",
     "automated-deployment-with-github-actions-and-cloudflare-pages",
     "adding-mdx-functionality-to-your-nextjs-blog",
@@ -223,5 +233,5 @@
     "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization",
     "bare-minimum-principles-writing-better-react-components"
   ],
-  "generatedAt": "2025-08-24T18:43:44.354Z"
+  "generatedAt": "2025-08-24T18:48:25.109Z"
 }

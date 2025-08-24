@@ -9,6 +9,7 @@
 	},
 	"homepage": "https://next-blog.rkristelijn.workers.dev",
 	"scripts": {
+		"predev": "node scripts/ensure-dev-files.js",
 		"dev": "next dev --turbopack",
 		"prebuild": "node scripts/generate-posts-data.js && node scripts/optimize-for-workers.js",
 		"build": "next build",
