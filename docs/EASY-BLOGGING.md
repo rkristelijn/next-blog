@@ -1,151 +1,151 @@
 # 📝 Easy Blogging Guide
 
-**Voor gebruikers zoals Gert Jan - Hoe je makkelijk kunt bloggen met dit systeem**
+**For users like Gert Jan - How to easily blog with this system**
 
-## 🎯 In 3 simpele stappen bloggen:
+## 🎯 Blog in 3 simple steps:
 
-### Stap 1: Fork het project
-- Ga naar https://github.com/rkristelijn/next-blog
-- Klik op "Fork" (rechtsboven)
-- Je hebt nu je eigen kopie!
+### Step 1: Fork the project
+- Go to https://github.com/rkristelijn/next-blog
+- Click "Fork" (top right)
+- You now have your own copy!
 
-### Stap 2: Voeg je posts toe
-- Ga naar `src/content/posts/` in je fork
-- Maak nieuwe `.mdx` bestanden aan
-- Gebruik deze format:
+### Step 2: Add your posts
+- Go to `src/content/posts/` in your fork
+- Create new `.mdx` files
+- Use this format:
 
 ```markdown
 ---
-title: "Mijn Blog Post Titel"
+title: "My Blog Post Title"
 date: "2024-01-25"
-author: "Jouw Naam"
-excerpt: "Korte beschrijving van je post"
+author: "Your Name"
+excerpt: "Brief description of your post"
 ---
 
-# Mijn Blog Post Titel
+# My Blog Post Title
 
-Hier schrijf je je content...
+Here you write your content...
 
-## Subkopjes werken ook
+## Subheadings work too
 
-- Lijstjes zijn mogelijk
-- **Vet** en *cursief* tekst
-- Links naar [andere sites](https://example.com)
+- Lists are possible
+- **Bold** and *italic* text
+- Links to [other sites](https://example.com)
 
 ```javascript
-// Code blokken met syntax highlighting
-console.log("Hallo wereld!");
+// Code blocks with syntax highlighting
+console.log("Hello world!");
 ```
 ```
 
-### Stap 3: Publiceer
+### Step 3: Publish
 ```bash
 git add .
-git commit -m "Nieuwe blog post toegevoegd"
+git commit -m "Added new blog post"
 git push origin main
 ```
 
-**Klaar!** 🎉 Je blog wordt automatisch gebouwd en online gezet.
+**Done!** 🎉 Your blog will be automatically built and published online.
 
-## 🔄 Wat gebeurt er automatisch?
+## 🔄 What happens automatically?
 
-Wanneer je naar `main` branch pusht:
+When you push to the `main` branch:
 
-1. **GitHub Actions start** 🤖
-2. **Posts worden verwerkt** - Het systeem leest je `.mdx` bestanden
-3. **Data wordt gegenereerd** - `posts.json` wordt automatisch gemaakt
-4. **Blog wordt gebouwd** - Next.js maakt statische pagina's
-5. **Deployment** - Je blog gaat live op Cloudflare Workers
+1. **GitHub Actions starts** 🤖
+2. **Posts are processed** - The system reads your `.mdx` files
+3. **Data is generated** - `posts.json` is automatically created
+4. **Blog is built** - Next.js creates static pages
+5. **Deployment** - Your blog goes live on Cloudflare Workers
 
-## 📁 Bestandsstructuur
+## 📁 File Structure
 
 ```
-je-blog/
-├── src/content/posts/     👈 HIER zet je je blog posts!
-│   ├── 01-eerste-post.mdx
-│   ├── 02-tweede-post.mdx
-│   └── 03-nieuwste-post.mdx
-├── src/data/posts.json    👈 Dit wordt automatisch gemaakt
-└── andere bestanden...
+your-blog/
+├── src/content/posts/     👈 PUT your blog posts HERE!
+│   ├── 01-first-post.mdx
+│   ├── 02-second-post.mdx
+│   └── 03-latest-post.mdx
+├── src/data/posts.json    👈 This is automatically created
+└── other files...
 ```
 
-## ✅ Checklist voor nieuwe posts
+## ✅ Checklist for new posts
 
-- [ ] Bestand eindigt op `.mdx`
-- [ ] Frontmatter is compleet (`title`, `date`, `author`, `excerpt`)
-- [ ] Datum format is `YYYY-MM-DD`
-- [ ] Titel is beschrijvend
-- [ ] Excerpt is 1-2 zinnen
+- [ ] File ends with `.mdx`
+- [ ] Frontmatter is complete (`title`, `date`, `author`, `excerpt`)
+- [ ] Date format is `YYYY-MM-DD`
+- [ ] Title is descriptive
+- [ ] Excerpt is 1-2 sentences
 - [ ] Content is in markdown format
 
-## 🌍 Talen
+## 🌍 Languages
 
-Het systeem werkt met **elke taal**:
-- 🇳🇱 Nederlands ✅
-- 🇬🇧 Engels ✅  
-- 🇩🇪 Duits ✅
-- 🇫🇷 Frans ✅
-- En alle andere talen!
+The system works with **any language**:
+- 🇳🇱 Dutch ✅
+- 🇬🇧 English ✅  
+- 🇩🇪 German ✅
+- 🇫🇷 French ✅
+- And all other languages!
 
-## 🎨 Aanpassingen
+## 🎨 Customizations
 
-### Je blog personaliseren:
+### Personalizing your blog:
 
-1. **Site titel**: Bewerk `src/app/layout.tsx`
-2. **Kleuren**: Pas `src/lib/theme.ts` aan
-3. **Homepage**: Wijzig `src/components/Hero.tsx`
-4. **Footer**: Bewerk `src/components/Footer.tsx`
+1. **Site title**: Edit `src/app/layout.tsx`
+2. **Colors**: Adjust `src/lib/theme.ts`
+3. **Homepage**: Change `src/components/Hero.tsx`
+4. **Footer**: Edit `src/components/Footer.tsx`
 
-## 🆘 Hulp nodig?
+## 🆘 Need help?
 
-### Veelgestelde vragen:
+### Frequently asked questions:
 
-**Q: Mijn nieuwe post verschijnt niet**
-A: Controleer of:
-- Je frontmatter compleet is
-- Je naar `main` branch hebt gepusht
-- GitHub Actions klaar is (groene vinkje)
+**Q: My new post doesn't appear**
+A: Check if:
+- Your frontmatter is complete
+- You pushed to the `main` branch
+- GitHub Actions is finished (green checkmark)
 
-**Q: Foutmelding bij bouwen**
-A: Check of:
-- Alle posts geldige frontmatter hebben
-- Geen syntax fouten in je markdown
-- Datum format correct is (`YYYY-MM-DD`)
+**Q: Error during build**
+A: Check if:
+- All posts have valid frontmatter
+- No syntax errors in your markdown
+- Date format is correct (`YYYY-MM-DD`)
 
-**Q: Hoe zie ik of deployment werkt?**
-A: Ga naar je GitHub repository → "Actions" tab → bekijk de laatste workflow
+**Q: How do I see if deployment works?**
+A: Go to your GitHub repository → "Actions" tab → view the latest workflow
 
 ### Contact:
-- 🐛 Bug melden: [GitHub Issues](https://github.com/rkristelijn/next-blog/issues)
-- 💬 Vragen stellen: [GitHub Discussions](https://github.com/rkristelijn/next-blog/discussions)
+- 🐛 Report bugs: [GitHub Issues](https://github.com/rkristelijn/next-blog/issues)
+- 💬 Ask questions: [GitHub Discussions](https://github.com/rkristelijn/next-blog/discussions)
 
-## 🎉 Voorbeelden
+## 🎉 Examples
 
-### Voorbeeld post:
+### Example post:
 ```markdown
 ---
-title: "Mijn avontuur met AI"
+title: "My Adventure with AI"
 date: "2024-01-25"
 author: "Gert Jan"
-excerpt: "Hoe ik AI gebruik in mijn dagelijks leven"
+excerpt: "How I use AI in my daily life"
 ---
 
-# Mijn avontuur met AI
+# My Adventure with AI
 
-Vandaag wil ik vertellen over mijn ervaringen met AI...
+Today I want to tell you about my experiences with AI...
 
-## Wat ik heb geleerd
+## What I learned
 
-AI is een krachtig hulpmiddel, maar...
+AI is a powerful tool, but...
 
-### Tips voor beginners:
-1. Start klein
-2. Experimenteer veel
-3. Blijf kritisch
+### Tips for beginners:
+1. Start small
+2. Experiment a lot
+3. Stay critical
 
-**Conclusie**: AI is fantastisch als je weet hoe je het moet gebruiken!
+**Conclusion**: AI is fantastic if you know how to use it!
 ```
 
 ---
 
-**Happy blogging!** 🚀 Veel plezier met je nieuwe blog!
+**Happy blogging!** 🚀 Have fun with your new blog!

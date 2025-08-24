@@ -164,10 +164,12 @@ npm run type-check    # TypeScript checking
 Detailed documentation is available in the [`./docs`](docs) folder:
 
 - [User Manual](docs/USER-MANUAL.md) - Complete blogging guide for GitHub web interface
-- [User Guide](docs/user-guide.md) - How to use the blog
-- [Web User Checklist](docs/web-user-checklist.md) - Troubleshooting in Dutch
-- [Developer Guide](docs/developer-guide.md) - Technical details
+- [Easy Blogging Guide](docs/EASY-BLOGGING.md) - Quick start guide for new users
+- [Web User Checklist](docs/web-user-checklist.md) - Troubleshooting checklist
+- [Developer Guide](docs/DEVELOPER-DOCS.md) - Fork management and contributions
 - [Architecture Overview](docs/architecture.md) - System design
+
+**Dutch versions available:** [Easy Blogging (NL)](docs/EASY-BLOGGING-nl.md), [Web Checklist (NL)](docs/web-user-checklist-nl.md)
 
 ## 🆘 Troubleshooting
 

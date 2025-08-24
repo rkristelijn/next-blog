@@ -1,97 +1,97 @@
-# GitHub Web User Checklist - "Mijn Deployment Werkt Niet"
+# GitHub Web User Checklist - "My Deployment Doesn't Work"
 
-Voor gebruikers die alleen via de GitHub website werken (geen lokale setup).
+For users who work only through the GitHub website (no local setup).
 
-## ✅ Stap-voor-Stap Checklist
+## ✅ Step-by-Step Checklist
 
-### 1. GitHub Actions Status Controleren
-- [ ] Ga naar je repository op GitHub
-- [ ] Klik op `Actions` tab
-- [ ] Zie je rode X'jes (gefaalde runs)?
-- [ ] Klik op de meest recente run voor details
+### 1. Check GitHub Actions Status
+- [ ] Go to your repository on GitHub
+- [ ] Click `Actions` tab
+- [ ] Do you see red X's (failed runs)?
+- [ ] Click on the most recent run for details
 
-### 2. GitHub Actions Inschakelen
-- [ ] Zie je "Workflows aren't being run on this forked repository"?
-- [ ] Zo ja: klik "I understand my workflows, go ahead and enable them"
+### 2. Enable GitHub Actions
+- [ ] Do you see "Workflows aren't being run on this forked repository"?
+- [ ] If yes: click "I understand my workflows, go ahead and enable them"
 
-### 3. Cloudflare Secrets Instellen
-**Dit is meestal het probleem!**
+### 3. Set Up Cloudflare Secrets
+**This is usually the problem!**
 
-**Cloudflare gegevens ophalen:**
-- [ ] Log in op [Cloudflare Dashboard](https://dash.cloudflare.com)
-- [ ] Account ID: staat in de rechter sidebar
+**Get Cloudflare credentials:**
+- [ ] Log in to [Cloudflare Dashboard](https://dash.cloudflare.com)
+- [ ] Account ID: found in the right sidebar
 - [ ] API Token: "My Profile" → "API Tokens" → "Create Token" → "Workers:Edit"
 
-**Secrets toevoegen aan GitHub:**
-- [ ] Ga naar je repository → `Settings` tab
-- [ ] Links: `Secrets and variables` → `Actions`
-- [ ] Klik "New repository secret"
-- [ ] Voeg toe: `CLOUDFLARE_API_TOKEN` (je API token)
-- [ ] Voeg toe: `CLOUDFLARE_ACCOUNT_ID` (je account ID)
+**Add secrets to GitHub:**
+- [ ] Go to your repository → `Settings` tab
+- [ ] Left sidebar: `Secrets and variables` → `Actions`
+- [ ] Click "New repository secret"
+- [ ] Add: `CLOUDFLARE_API_TOKEN` (your API token)
+- [ ] Add: `CLOUDFLARE_ACCOUNT_ID` (your account ID)
 
-### 4. Branch Controleren
-- [ ] Bewerk je bestanden op de `main` branch (niet `master`)
-- [ ] Check de branch dropdown bij het bewerken
+### 4. Check Branch
+- [ ] Edit your files on the `main` branch (not `master`)
+- [ ] Check the branch dropdown when editing files
 
-### 5. Post Format Controleren
-Zorg dat je nieuwe posts deze format hebben:
+### 5. Check Post Format
+Make sure your new posts have this format:
 
 ```markdown
 ---
-title: "Je Post Titel"
+title: "Your Post Title"
 date: "2024-01-25"
-excerpt: "Korte beschrijving"
+excerpt: "Brief description"
 ---
 
-# Je Post Titel
+# Your Post Title
 
-Je content hier...
+Your content here...
 ```
 
-**Let op:**
-- [ ] `---` lijnen boven en onder frontmatter
-- [ ] Aanhalingstekens rond alle waarden
-- [ ] Datum format: YYYY-MM-DD
-- [ ] Alle vereiste velden: title, date, excerpt
+**Watch out for:**
+- [ ] `---` lines above and below frontmatter
+- [ ] Quotes around all values
+- [ ] Date format: YYYY-MM-DD
+- [ ] All required fields: title, date, excerpt
 
-## 🚨 Meest Voorkomende Problemen
+## 🚨 Most Common Problems
 
 ### "Error: Unable to find account"
-→ `CLOUDFLARE_ACCOUNT_ID` ontbreekt of is verkeerd
+→ `CLOUDFLARE_ACCOUNT_ID` is missing or wrong
 
 ### "Authentication failed" 
-→ `CLOUDFLARE_API_TOKEN` ontbreekt of is verlopen
+→ `CLOUDFLARE_API_TOKEN` is missing or expired
 
 ### "Workflow not found"
-→ GitHub Actions niet ingeschakeld
+→ GitHub Actions not enabled
 
-### Nieuwe posts verschijnen niet
-→ Frontmatter format verkeerd of ontbreekt
+### New posts don't appear
+→ Frontmatter format is wrong or missing
 
-## 🆘 Noodoplossing
+## 🆘 Emergency Solution
 
-Als niets werkt:
+If nothing works:
 
-1. **Check je secrets opnieuw:**
-   - Verwijder oude secrets
-   - Maak nieuwe Cloudflare API token
-   - Voeg opnieuw toe aan GitHub
+1. **Check your secrets again:**
+   - Delete old secrets
+   - Create new Cloudflare API token
+   - Add them again to GitHub
 
-2. **Test met een kleine wijziging:**
-   - Bewerk de README.md
-   - Voeg een spatie toe
-   - Commit de wijziging
-   - Kijk of GitHub Actions start
+2. **Test with a small change:**
+   - Edit the README.md
+   - Add a space
+   - Commit the change
+   - See if GitHub Actions starts
 
-3. **Vraag hulp:**
-   - Maak een issue in de [originele repository](https://github.com/rkristelijn/next-blog/issues)
-   - Vermeld: error messages uit GitHub Actions
-   - Vermeld: welke stappen je al geprobeerd hebt
+3. **Ask for help:**
+   - Create an issue in the [original repository](https://github.com/rkristelijn/next-blog/issues)
+   - Include: error messages from GitHub Actions
+   - Include: which steps you've already tried
 
 ## 📞 Contact
 
-Voor directe hulp: contact @rkristelijn via GitHub issues.
+For direct help: contact @rkristelijn via GitHub issues.
 
 ---
 
-*Deze checklist is speciaal gemaakt voor gebruikers die alleen via de GitHub website werken.*
+*This checklist is specifically made for users who work only through the GitHub website.*

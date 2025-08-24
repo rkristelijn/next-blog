@@ -7,8 +7,12 @@ This documentation covers the architecture, setup, and development guidelines fo
 ### For Users
 - [User Manual](USER-MANUAL.md) - Complete guide for blogging via GitHub web interface
 - [Easy Blogging Guide](EASY-BLOGGING.md) - Quick start guide for new users
-- [Web User Checklist](web-user-checklist.md) - Troubleshooting checklist in Dutch
+- [Web User Checklist](web-user-checklist.md) - Troubleshooting checklist
 - [GitHub Actions Troubleshooting](troubleshooting-github-actions.md) - Fix deployment issues
+
+#### Dutch Versions (Nederlandse Versies)
+- [Web User Checklist (NL)](web-user-checklist-nl.md) - Troubleshooting checklist in Dutch
+- [Easy Blogging Guide (NL)](EASY-BLOGGING-nl.md) - Quick start guide in Dutch
 
 ### For Developers
 - [Developer Documentation](DEVELOPER-DOCS.md) - Managing forks, contributions, and repository maintenance
