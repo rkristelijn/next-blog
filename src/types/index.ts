@@ -10,6 +10,7 @@ export interface Post {
   author: string;
   slug: string;
   content: string;
+  originalFilename?: string; // Optional for backward compatibility
 }
 
 export interface PostPageProps {

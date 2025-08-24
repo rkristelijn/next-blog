@@ -82,7 +82,8 @@ export const getPostBySlug = (slug: string): Post | undefined => {
       date: data.date,
       author: data.author,
       excerpt: data.excerpt,
-      content
+      content,
+      originalFilename: `${slug}.mdx`
     };
   } catch (error) {
     console.error(`Error reading post ${slug}:`, error);

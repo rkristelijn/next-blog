@@ -67,6 +67,7 @@ export const getAllPosts = (): Omit<Post, 'content'>[] => {
       date: post.date,
       author: post.author,
       excerpt: post.excerpt,
+      originalFilename: post.originalFilename,
     }))
     .sort((a, b) => {
       // Sort by date, newest first
@@ -98,6 +99,7 @@ export const getPostBySlug = async (slug: string): Promise<Post | undefined> => 
     date: postMeta.date,
     author: postMeta.author,
     excerpt: postMeta.excerpt,
+    originalFilename: postMeta.originalFilename,
     content,
   };
 }
@@ -122,6 +124,7 @@ export const getPostMetaBySlug = (slug: string): Omit<Post, 'content'> | undefin
     date: postMeta.date,
     author: postMeta.author,
     excerpt: postMeta.excerpt,
+    originalFilename: postMeta.originalFilename,
   };
 }
 

@@ -26,10 +26,12 @@ import {
 import type { Post } from '@/types';
 
 export type SortOption = 
-  | 'date-desc'    // Newest first (default)
-  | 'date-asc'     // Oldest first
-  | 'title-asc'    // A-Z
-  | 'title-desc';  // Z-A
+  | 'date-desc'      // Newest first (default)
+  | 'date-asc'       // Oldest first
+  | 'title-asc'      // A-Z
+  | 'title-desc'     // Z-A
+  | 'filename-desc'  // Filename Z-A (reversed, default for filename)
+  | 'filename-asc';  // Filename A-Z (normal)
 
 interface PostsFilterProps {
   posts: Omit<Post, 'content'>[];
@@ -66,6 +68,12 @@ export default function PostsFilter({ posts, onFilteredPostsChange }: PostsFilte
           return a.title.localeCompare(b.title);
         case 'title-desc':
           return b.title.localeCompare(a.title);
+        case 'filename-desc':
+          // Reversed filename sort (default for filename)
+          return (b.originalFilename || '').localeCompare(a.originalFilename || '');
+        case 'filename-asc':
+          // Normal filename sort
+          return (a.originalFilename || '').localeCompare(b.originalFilename || '');
         default:
           return 0;
       }
@@ -113,6 +121,8 @@ export default function PostsFilter({ posts, onFilteredPostsChange }: PostsFilte
       case 'date-asc': return 'Oldest first';
       case 'title-asc': return 'Title A-Z';
       case 'title-desc': return 'Title Z-A';
+      case 'filename-desc': return 'Filename Z-A (reversed)';
+      case 'filename-asc': return 'Filename A-Z (normal)';
       default: return '';
     }
   }, []);
@@ -235,6 +245,8 @@ export default function PostsFilter({ posts, onFilteredPostsChange }: PostsFilte
                 <MenuItem value="date-asc">📅 Oldest first</MenuItem>
                 <MenuItem value="title-asc">🔤 Title A-Z</MenuItem>
                 <MenuItem value="title-desc">🔤 Title Z-A</MenuItem>
+                <MenuItem value="filename-desc">📄 Filename Z-A (reversed)</MenuItem>
+                <MenuItem value="filename-asc">📄 Filename A-Z (normal)</MenuItem>
               </Select>
             </FormControl>
           </Box>
