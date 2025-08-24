@@ -11,6 +11,7 @@ This documentation covers the architecture, setup, and development guidelines fo
 - [GitHub Actions Troubleshooting](troubleshooting-github-actions.md) - Fix deployment issues
 
 ### For Developers
+- [Developer Documentation](DEVELOPER-DOCS.md) - Managing forks, contributions, and repository maintenance
 - [Architecture Overview](architecture.md)
 - [Platform Rules](platform-rules.md)
 - [Architecture Rules](architecture-rules.md)
