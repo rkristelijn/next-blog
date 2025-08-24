@@ -25,7 +25,7 @@ const features: Feature[] = [
   {
     icon: '📝',
     title: 'Markdown',
-    description: 'Write content in Markdown with MDX support'
+    description: 'Write content in Markdown with MDX support and Mermaid diagrams'
   },
   {
     icon: '☁️',
