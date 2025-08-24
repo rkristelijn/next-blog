@@ -97,8 +97,8 @@ describe('posts library', () => {
     });
 
     it('handles null and undefined', () => {
-      expect(postExists(null as any)).toBe(false);
-      expect(postExists(undefined as any)).toBe(false);
+      expect(postExists(null as unknown as string)).toBe(false);
+      expect(postExists(undefined as unknown as string)).toBe(false);
     });
   });
 });
