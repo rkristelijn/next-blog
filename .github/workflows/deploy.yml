@@ -76,11 +76,11 @@ jobs:
       - name: Build project
         run: npm run ci:build
 
-      - name: Advanced Worker optimization
+      - name: Aggressive Worker optimization
         run: |
-          echo "🚀 Running advanced Cloudflare Workers optimization..."
-          node scripts/advanced-worker-optimization.js
-          echo "✅ Advanced optimization completed!"
+          echo "⚡ Running aggressive Cloudflare Workers optimization..."
+          node scripts/aggressive-worker-optimization.js
+          echo "✅ Aggressive optimization completed!"
 
       - name: Check if Cloudflare Worker exists
         id: check-worker
