@@ -28,7 +28,7 @@ describe('PostCard', () => {
   });
 
   it('handles missing author gracefully', () => {
-    const postWithoutAuthor = { ...mockPost, author: undefined };
+    const postWithoutAuthor = { ...mockPost, author: '' };
     
     expect(() => {
       render(<PostCard post={postWithoutAuthor} />);

@@ -2,7 +2,7 @@
  * Tests for Mermaid component
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { render } from '../../test-utils/render';
 import { mockMermaidChart } from '../../test-utils/mocks';
@@ -19,7 +19,7 @@ describe('Mermaid', () => {
 
   it('renders mermaid diagram successfully', async () => {
     const mockRender = vi.mocked(mermaid.render);
-    mockRender.mockResolvedValue({ svg: '<svg>Test diagram</svg>' });
+    mockRender.mockResolvedValue({ svg: '<svg>Test diagram</svg>', diagramType: 'graph' });
 
     render(<Mermaid chart={mockMermaidChart} />);
 
@@ -48,7 +48,7 @@ describe('Mermaid', () => {
 
   it('uses custom id when provided', async () => {
     const mockRender = vi.mocked(mermaid.render);
-    mockRender.mockResolvedValue({ svg: '<svg>Custom ID diagram</svg>' });
+    mockRender.mockResolvedValue({ svg: '<svg>Custom ID diagram</svg>', diagramType: 'graph' });
 
     const customId = 'custom-diagram-id';
     render(<Mermaid chart={mockMermaidChart} id={customId} />);
@@ -60,7 +60,7 @@ describe('Mermaid', () => {
 
   it('generates unique id when not provided', async () => {
     const mockRender = vi.mocked(mermaid.render);
-    mockRender.mockResolvedValue({ svg: '<svg>Auto ID diagram</svg>' });
+    mockRender.mockResolvedValue({ svg: '<svg>Auto ID diagram</svg>', diagramType: 'graph' });
 
     render(<Mermaid chart={mockMermaidChart} />);
 
@@ -75,7 +75,7 @@ describe('Mermaid', () => {
   it('configures mermaid with theme settings', async () => {
     const mockInitialize = vi.mocked(mermaid.initialize);
     const mockRender = vi.mocked(mermaid.render);
-    mockRender.mockResolvedValue({ svg: '<svg>Themed diagram</svg>' });
+    mockRender.mockResolvedValue({ svg: '<svg>Themed diagram</svg>', diagramType: 'graph' });
 
     render(<Mermaid chart={mockMermaidChart} />);
 
@@ -97,7 +97,8 @@ describe('Mermaid', () => {
   it('makes SVG responsive', async () => {
     const mockRender = vi.mocked(mermaid.render);
     mockRender.mockResolvedValue({ 
-      svg: '<svg width="400" height="300">Responsive diagram</svg>' 
+      svg: '<svg width="400" height="300">Responsive diagram</svg>',
+      diagramType: 'graph'
     });
 
     const { container } = render(<Mermaid chart={mockMermaidChart} />);

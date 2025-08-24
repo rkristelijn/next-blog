@@ -16,7 +16,7 @@ export interface UseMermaidRendererOptions {
 
 export interface UseMermaidRendererReturn {
   /** Ref to attach to the container element */
-  elementRef: React.RefObject<HTMLDivElement>;
+  elementRef: React.RefObject<HTMLDivElement | null>;
   /** Loading state during rendering */
   isLoading: boolean;
   /** Error state if rendering fails */

@@ -12,7 +12,6 @@ export const mockPost: Post = {
   content: '# Test Content\n\nThis is test content for the blog post.',
   date: '2024-08-24',
   author: 'Test Author',
-  originalFilename: 'test-post.mdx',
 };
 
 export const mockPosts: Post[] = [
@@ -25,7 +24,6 @@ export const mockPosts: Post[] = [
     content: '# Second Post\n\nContent for the second post.',
     date: '2024-08-23',
     author: 'Another Author',
-    originalFilename: 'second-post.mdx',
   },
   {
     id: 'third-post',
@@ -34,7 +32,7 @@ export const mockPosts: Post[] = [
     excerpt: 'This is the third test post excerpt.',
     content: '# Third Post\n\nContent for the third post.',
     date: '2024-08-22',
-    originalFilename: 'third-post.mdx',
+    author: 'Third Author',
   },
 ];
 
