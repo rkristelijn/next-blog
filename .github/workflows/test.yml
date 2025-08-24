@@ -1,0 +1,99 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate posts data
+        run: node scripts/generate-posts-data.js
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Run diagnostics
+        run: npm run diagnose
+
+      - name: Test build process
+        run: npm run build
+
+      - name: Check for security vulnerabilities
+        run: npm audit --audit-level=moderate
+
+  quality-checks:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check documentation consistency
+        run: |
+          echo "📚 Checking documentation..."
+          
+          # Check if new posts have proper frontmatter
+          for file in src/content/posts/*.mdx; do
+            if ! grep -q "^title:" "$file"; then
+              echo "❌ Missing title in $file"
+              exit 1
+            fi
+            if ! grep -q "^date:" "$file"; then
+              echo "❌ Missing date in $file"
+              exit 1
+            fi
+            if ! grep -q "^excerpt:" "$file"; then
+              echo "❌ Missing excerpt in $file"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All posts have required frontmatter"
+
+      - name: Check for sensitive data
+        run: |
+          echo "🔒 Checking for sensitive data..."
+          
+          # Check for potential secrets in code
+          if grep -r "CLOUDFLARE_API_TOKEN.*=" src/ || grep -r "api_token.*=" src/; then
+            echo "❌ Potential API token found in source code"
+            exit 1
+          fi
+          
+          # Check for hardcoded secrets
+          if grep -r "sk-" src/ || grep -r "pk_" src/; then
+            echo "❌ Potential hardcoded secret found"
+            exit 1
+          fi
+          
+          echo "✅ No sensitive data detected"
