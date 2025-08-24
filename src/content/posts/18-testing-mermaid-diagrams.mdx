@@ -23,6 +23,19 @@ flowchart TD
     C --> F[End]
 ```
 
+**Code for this diagram:**
+````markdown
+```mermaid
+flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> E[Fix Issue]
+    E --> B
+    C --> F[End]
+```
+````
+
 ## Git Workflow Diagram
 
 This diagram shows our new branch protection workflow:
@@ -69,6 +82,26 @@ sequenceDiagram
     M->>M: Review and selective merge
     M->>F: Provide feedback
 ```
+
+**Code for this diagram:**
+````markdown
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Fork
+    participant M as Main Repo
+    participant CI as GitHub Actions
+    
+    U->>F: Create fork
+    U->>F: Add personal content
+    U->>F: Make improvements
+    F->>M: Create pull request
+    M->>CI: Run automated checks
+    CI->>M: Validation results
+    M->>M: Review and selective merge
+    M->>F: Provide feedback
+```
+````
 
 ## Class Diagram
 
@@ -153,7 +186,110 @@ journey
       Share blog: 5: User
 ```
 
-## Testing Different Themes
+## C4 Architecture Diagrams
+
+### System Context Diagram
+
+This shows our blog template in the context of its environment:
+
+```mermaid
+graph TB
+    User[👤 Blog Users] --> Blog[Next.js Blog Template]
+    Developer[👨‍💻 Developers] --> Blog
+    
+    Blog --> Cloudflare[☁️ Cloudflare Workers]
+    Blog --> GitHub[📦 GitHub Repository]
+    Blog --> CDN[🌍 Global CDN]
+    
+    subgraph "External Systems"
+        Cloudflare
+        GitHub
+        CDN
+    end
+    
+    subgraph "Next.js Blog Template"
+        NextJS[Next.js 15 App]
+        MDX[MDX Content]
+        MUI[Material-UI]
+        Mermaid[Mermaid Diagrams]
+    end
+    
+    style Blog fill:#e1f5fe
+    style Cloudflare fill:#fff3e0
+    style GitHub fill:#f3e5f5
+    style NextJS fill:#e8f5e8
+    style MDX fill:#fff8e1
+    style MUI fill:#fce4ec
+    style Mermaid fill:#e8eaf6
+```
+
+**Code for this diagram:**
+````markdown
+```mermaid
+graph TB
+    User[👤 Blog Users] --> Blog[Next.js Blog Template]
+    Developer[👨‍💻 Developers] --> Blog
+    
+    Blog --> Cloudflare[☁️ Cloudflare Workers]
+    Blog --> GitHub[📦 GitHub Repository]
+    Blog --> CDN[🌍 Global CDN]
+    
+    subgraph "External Systems"
+        Cloudflare
+        GitHub
+        CDN
+    end
+    
+    subgraph "Next.js Blog Template"
+        NextJS[Next.js 15 App]
+        MDX[MDX Content]
+        MUI[Material-UI]
+        Mermaid[Mermaid Diagrams]
+    end
+    
+    style Blog fill:#e1f5fe
+    style Cloudflare fill:#fff3e0
+    style GitHub fill:#f3e5f5
+    style NextJS fill:#e8f5e8
+    style MDX fill:#fff8e1
+    style MUI fill:#fce4ec
+    style Mermaid fill:#e8eaf6
+```
+````
+
+### Container Diagram
+
+This shows the main containers within our blog system:
+
+```mermaid
+graph TB
+    User[👤 User] --> WebApp[🌐 Next.js Web App]
+    
+    subgraph "Blog Template System"
+        WebApp --> StaticGen[📄 Static Site Generator]
+        WebApp --> ContentSys[📁 Content Management]
+        WebApp --> ThemeSys[🎨 Theme System]
+        WebApp --> DiagramSys[📊 Diagram Rendering]
+        
+        StaticGen --> BuildProcess[🔨 Build Process]
+        ContentSys --> MDXParser[📝 MDX Parser]
+        ThemeSys --> MUIComponents[🧩 MUI Components]
+        DiagramSys --> MermaidRenderer[🎯 Mermaid Renderer]
+    end
+    
+    subgraph "Deployment Infrastructure"
+        BuildProcess --> CloudflarePages[☁️ Cloudflare Pages]
+        CloudflarePages --> GlobalCDN[🌍 Global CDN]
+        GitHubActions[⚙️ GitHub Actions] --> BuildProcess
+    end
+    
+    style WebApp fill:#e3f2fd
+    style StaticGen fill:#e8f5e8
+    style ContentSys fill:#fff3e0
+    style ThemeSys fill:#fce4ec
+    style DiagramSys fill:#e8eaf6
+    style CloudflarePages fill:#e1f5fe
+```
 
 These diagrams should automatically adapt to both light and dark themes. The Mermaid component uses the current Material-UI theme to configure colors and styling.
 
@@ -194,6 +330,58 @@ const MermaidComponent: React.FC<MermaidProps> = ({ chart, id }) => {
   return <div>Mermaid diagram here</div>;
 };
 ```
+
+## Mermaid Resources and Documentation
+
+### Official Documentation
+- **Main Documentation**: [mermaid.js.org](https://mermaid.js.org/)
+- **Live Editor**: [mermaid.live](https://mermaid.live/) - Test your diagrams online
+- **Syntax Reference**: [Flowchart Syntax](https://mermaid.js.org/syntax/flowchart.html)
+- **All Diagram Types**: [Diagram Syntax](https://mermaid.js.org/syntax/examples.html)
+
+### Quick Reference
+- **Flowcharts**: `flowchart TD` or `graph TB`
+- **Sequence Diagrams**: `sequenceDiagram`
+- **Class Diagrams**: `classDiagram`
+- **State Diagrams**: `stateDiagram-v2`
+- **Git Graphs**: `gitGraph`
+- **Pie Charts**: `pie title "Chart Title"`
+- **Journey Maps**: `journey`
+
+### Tips for Better Diagrams
+1. **Test First**: Always test complex diagrams in [mermaid.live](https://mermaid.live/)
+2. **Keep It Simple**: Don't overcrowd diagrams with too many elements
+3. **Use Colors**: Add `style` commands for better visual hierarchy
+4. **Mobile Friendly**: Consider how diagrams look on small screens
+5. **Meaningful Labels**: Use descriptive text for nodes and connections
+
+## How to Use Mermaid in Your Blog Posts
+
+### Step 1: Write Your Diagram
+Create your diagram using Mermaid syntax in a code block:
+
+````markdown
+```mermaid
+flowchart LR
+    A[Write Post] --> B[Add Diagram]
+    B --> C[Test in mermaid.live]
+    C --> D[Publish]
+```
+````
+
+### Step 2: Test Online
+Before publishing, test your diagram at [mermaid.live](https://mermaid.live/) to ensure it renders correctly.
+
+### Step 3: Add to Your Post
+Simply paste the code block into your `.mdx` file and it will automatically render as a visual diagram.
+
+### Common Use Cases
+- **Process Flows**: Show step-by-step processes
+- **System Architecture**: Visualize component relationships  
+- **User Journeys**: Map user experience flows
+- **Decision Trees**: Show decision-making processes
+- **Git Workflows**: Illustrate branching strategies
+- **Data Flows**: Show how data moves through systems
 
 ## Conclusion
 
