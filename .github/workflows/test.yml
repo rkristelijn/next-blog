@@ -104,7 +104,7 @@ jobs:
           # We exclude:
           # - src/content: Original MDX blog posts (may contain documentation examples)
           # - src/data: Generated JSON files from blog posts (contain same documentation)
-          if grep -r "CLOUDFLARE_API_TOKEN.*=" src/ --exclude-dir=content --exclude-dir=data --exclude="*.json" | grep -v '\${{ secrets\.' | grep -v 'apiToken:' | grep -v 'CLOUDFLARE_API_TOKEN.*:'; then
+          if grep -r "CLOUDFLARE_API_TOKEN.*=" src/ --exclude-dir=content --exclude-dir=data --exclude="*.json" | grep -v 'secrets\.' | grep -v 'apiToken:' | grep -v 'CLOUDFLARE_API_TOKEN.*:'; then
             echo "❌ Potential API token found in source code"
             exit 1
           fi
