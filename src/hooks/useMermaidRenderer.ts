@@ -43,10 +43,10 @@ export interface UseMermaidRendererReturn {
  * }
  * ```
  */
-export function useMermaidRenderer({
+export const useMermaidRenderer = ({
   chart,
   id,
-}: UseMermaidRendererOptions): UseMermaidRendererReturn {
+}: UseMermaidRendererOptions): UseMermaidRendererReturn => {
   const elementRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';

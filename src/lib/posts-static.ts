@@ -29,7 +29,7 @@ const contentCache = new Map<string, string>();
  * @param slug - The post slug
  * @returns The post content
  */
-async function loadPostContent(slug: string): Promise<string> {
+const loadPostContent = async (slug: string): Promise<string> => {
   // Check cache first
   if (contentCache.has(slug)) {
     return contentCache.get(slug)!;
@@ -53,7 +53,7 @@ async function loadPostContent(slug: string): Promise<string> {
  * Get all blog posts from static data (metadata only for performance)
  * @returns Array of all posts with metadata (content excluded)
  */
-export function getAllPosts(): Omit<Post, 'content'>[] {
+export const getAllPosts = (): Omit<Post, 'content'>[] => {
   return (postsMetadata.posts as PostMetadata[]).map(post => ({
     id: post.id,
     slug: post.slug,
@@ -69,7 +69,7 @@ export function getAllPosts(): Omit<Post, 'content'>[] {
  * @param slug - The post slug to look up
  * @returns The post if found, undefined otherwise
  */
-export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+export const getPostBySlug = async (slug: string): Promise<Post | undefined> => {
   const postMeta = (postsMetadata.posts as PostMetadata[]).find(post => post.slug === slug);
   
   if (!postMeta) {
@@ -96,7 +96,7 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
  * @param slug - The post slug to look up
  * @returns The post metadata if found, undefined otherwise
  */
-export function getPostMetaBySlug(slug: string): Omit<Post, 'content'> | undefined {
+export const getPostMetaBySlug = (slug: string): Omit<Post, 'content'> | undefined => {
   const postMeta = (postsMetadata.posts as PostMetadata[]).find(post => post.slug === slug);
   
   if (!postMeta) {
@@ -117,7 +117,7 @@ export function getPostMetaBySlug(slug: string): Omit<Post, 'content'> | undefin
  * Get all post slugs (useful for static generation)
  * @returns Array of all post slugs
  */
-export function getAllPostSlugs(): string[] {
+export const getAllPostSlugs = (): string[] => {
   return postsMetadata.slugs;
 }
 
@@ -126,6 +126,6 @@ export function getAllPostSlugs(): string[] {
  * @param slug - The post slug to check
  * @returns True if the post exists, false otherwise
  */
-export function postExists(slug: string): boolean {
+export const postExists = (slug: string): boolean => {
   return postsMetadata.slugs.includes(slug);
 } 

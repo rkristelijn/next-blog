@@ -17,7 +17,7 @@ const POSTS_FILE = path.join(DATA_DIR, 'posts.json');
 const METADATA_FILE = path.join(DATA_DIR, 'posts-metadata.json');
 const CONTENT_DIR = path.join(DATA_DIR, 'content');
 
-async function optimizeForWorkers() {
+const optimizeForWorkers = async () => {
   try {
     console.log('🔧 Optimizing for Cloudflare Workers...');
     

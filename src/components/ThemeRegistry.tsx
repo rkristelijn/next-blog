@@ -29,7 +29,7 @@ const ThemeContext = createContext<{
 export const useTheme = () => useContext(ThemeContext);
 
 // Theme provider component that manages theme state
-function ThemeProviderWrapper({ children }: { children: ReactNode }) {
+const ThemeProviderWrapper = ({ children }: { children: ReactNode }) => {
   const { mode, setMode } = useColorScheme();
 
   useEffect(() => {

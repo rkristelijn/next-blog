@@ -17,7 +17,7 @@ if (!fs.existsSync(dataDir)) {
  * @param {string} text - The text to convert
  * @returns {string} - URL-friendly slug
  */
-function createSlug(text) {
+const createSlug = (text) => {
   return text
     .toLowerCase()
     .replace(/\s+/g, '-')           // Replace spaces with hyphens
@@ -25,14 +25,14 @@ function createSlug(text) {
     .replace(/\-\-+/g, '-')         // Replace multiple hyphens with single hyphen
     .replace(/^-+/, '')             // Trim hyphens from start
     .replace(/-+$/, '');            // Trim hyphens from end
-}
+};
 
 /**
  * Compress content by removing excessive whitespace and comments
  * @param {string} content - The content to compress
  * @returns {string} - Compressed content
  */
-function compressContent(content) {
+const compressContent = (content) => {
   return content
     // Remove HTML comments
     .replace(/<!--[\s\S]*?-->/g, '')
@@ -44,7 +44,7 @@ function compressContent(content) {
     .trim();
 }
 
-function generatePostsData() {
+const generatePostsData = () => {
   try {
     console.log('Generating posts data...');
     

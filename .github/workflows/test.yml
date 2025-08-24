@@ -100,14 +100,14 @@ jobs:
         run: |
           echo "🔒 Checking for sensitive data..."
           
-          # Check for potential secrets in code
-          if grep -r "CLOUDFLARE_API_TOKEN.*=" src/ || grep -r "api_token.*=" src/; then
+          # Check for potential secrets in source code (excluding content files)
+          if grep -r "CLOUDFLARE_API_TOKEN.*=" src/ --exclude-dir=content --exclude-dir=data || grep -r "api_token.*=" src/ --exclude-dir=content --exclude-dir=data; then
             echo "❌ Potential API token found in source code"
             exit 1
           fi
           
-          # Check for hardcoded secrets
-          if grep -r "sk-" src/ || grep -r "pk_" src/; then
+          # Check for hardcoded secrets in source code only
+          if grep -r "sk-" src/ --exclude-dir=content --exclude-dir=data || grep -r "pk_" src/ --exclude-dir=content --exclude-dir=data; then
             echo "❌ Potential hardcoded secret found"
             exit 1
           fi

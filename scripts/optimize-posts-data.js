@@ -16,7 +16,7 @@ const DATA_DIR = path.join(__dirname, '..', 'src', 'data');
 const POSTS_FILE = path.join(DATA_DIR, 'posts.json');
 const OPTIMIZED_FILE = path.join(DATA_DIR, 'posts-optimized.json');
 
-async function optimizePostsData() {
+const optimizePostsData = async () => {
   try {
     console.log('📊 Optimizing posts data for Cloudflare Workers...');
     

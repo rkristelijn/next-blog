@@ -24,10 +24,10 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
  * Custom render function with theme provider
  * Wraps components with necessary providers for testing
  */
-export function renderWithTheme(
+export const renderWithTheme = (
   ui: React.ReactElement,
   options: CustomRenderOptions = {}
-) {
+) => {
   const { theme = testTheme, ...renderOptions } = options;
 
   const Wrapper = ({ children }: { children: React.ReactNode }) => (

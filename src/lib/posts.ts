@@ -30,7 +30,7 @@ const POSTS_DIRECTORY = path.join(process.cwd(), 'src/content/posts');
  * Get all blog posts from MDX files
  * @returns Array of all posts with metadata
  */
-export function getAllPosts(): Post[] {
+export const getAllPosts = (): Post[] => {
   try {
     // Get all MDX files from the posts directory
     const fileNames = fs.readdirSync(POSTS_DIRECTORY);
@@ -54,7 +54,7 @@ export function getAllPosts(): Post[] {
  * @param slug - The post slug to look up
  * @returns The post if found, undefined otherwise
  */
-export function getPostBySlug(slug: string): Post | undefined {
+export const getPostBySlug = (slug: string): Post | undefined => {
   try {
     const fullPath = path.join(POSTS_DIRECTORY, `${slug}.mdx`);
     
@@ -94,7 +94,7 @@ export function getPostBySlug(slug: string): Post | undefined {
  * Get all post slugs (useful for static generation)
  * @returns Array of all post slugs
  */
-export function getAllPostSlugs(): string[] {
+export const getAllPostSlugs = (): string[] => {
   try {
     const fileNames = fs.readdirSync(POSTS_DIRECTORY);
     return fileNames
@@ -111,7 +111,7 @@ export function getAllPostSlugs(): string[] {
  * @param slug - The post slug to check
  * @returns True if the post exists, false otherwise
  */
-export function postExists(slug: string): boolean {
+export const postExists = (slug: string): boolean => {
   const fullPath = path.join(POSTS_DIRECTORY, `${slug}.mdx`);
   return fs.existsSync(fullPath);
 } 

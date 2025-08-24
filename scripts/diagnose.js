@@ -27,7 +27,7 @@ console.log('🔍 Next.js Blog Template Diagnostic Tool\n');
 let issues = 0;
 let warnings = 0;
 
-function checkFile(filePath) {
+const checkFile = (filePath) => {
   const fullPath = path.join(process.cwd(), filePath);
   if (fs.existsSync(fullPath)) {
     console.log(`✅ ${filePath} - Found`);
@@ -39,7 +39,7 @@ function checkFile(filePath) {
   }
 }
 
-function checkDirectory(dirPath) {
+const checkDirectory = (dirPath) => {
   const fullPath = path.join(process.cwd(), dirPath);
   if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
     const files = fs.readdirSync(fullPath);
@@ -53,7 +53,7 @@ function checkDirectory(dirPath) {
   }
 }
 
-function checkGitBranch() {
+const checkGitBranch = () => {
   try {
     const branch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
     if (branch === 'main') {
@@ -70,7 +70,7 @@ function checkGitBranch() {
   }
 }
 
-function checkPostsContent() {
+const checkPostsContent = () => {
   const postsDir = path.join(process.cwd(), 'src/content/posts');
   if (!fs.existsSync(postsDir)) {
     return;
@@ -109,7 +109,7 @@ function checkPostsContent() {
   }
 }
 
-function checkPackageJson() {
+const checkPackageJson = () => {
   try {
     const packagePath = path.join(process.cwd(), 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
@@ -129,7 +129,7 @@ function checkPackageJson() {
   }
 }
 
-function testPostsGeneration() {
+const testPostsGeneration = () => {
   try {
     console.log('\n🧪 Testing posts data generation...');
     execSync('node scripts/generate-posts-data.js', { stdio: 'pipe' });
@@ -148,7 +148,7 @@ function testPostsGeneration() {
   }
 }
 
-function checkNodeVersion() {
+const checkNodeVersion = () => {
   const version = process.version;
   const majorVersion = parseInt(version.slice(1).split('.')[0]);
   
