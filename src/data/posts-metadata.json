@@ -179,6 +179,15 @@
       "date": "2024-08-24",
       "author": "Roel Kristelijn",
       "originalFilename": "20-solving-cloudflare-worker-resource-limits.mdx"
+    },
+    {
+      "id": "21-bare-minimum-principles-react-components",
+      "slug": "bare-minimum-principles-writing-better-react-components",
+      "title": "Bare Minimum Principles: Writing Better React Components",
+      "excerpt": "How to apply RTFM, C4C, KISS, YAGNI, HIPI, and NBI principles to write cleaner, more maintainable React components. A practical analysis of real component refactoring.",
+      "date": "2024-08-24",
+      "author": "Roel Kristelijn",
+      "originalFilename": "21-bare-minimum-principles-react-components.mdx"
     }
   ],
   "slugs": [
@@ -201,7 +210,8 @@
     "community-driven-development-when-users-become-co-creators",
     "testing-mermaid-diagrams-in-blog-posts",
     "code-quality-analysis-from-template-to-production-ready-platform",
-    "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization"
+    "solving-cloudflare-worker-resource-limits-a-deep-dive-into-performance-optimization",
+    "bare-minimum-principles-writing-better-react-components"
   ],
-  "generatedAt": "2025-08-24T17:25:22.791Z"
+  "generatedAt": "2025-08-24T17:32:10.317Z"
 }

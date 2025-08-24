@@ -1,0 +1,296 @@
+---
+title: "Bare Minimum Principles: Writing Better React Components"
+date: "2024-08-24"
+author: "Roel Kristelijn"
+excerpt: "How to apply RTFM, C4C, KISS, YAGNI, HIPI, and NBI principles to write cleaner, more maintainable React components. A practical analysis of real component refactoring."
+---
+
+# Bare Minimum Principles: Writing Better React Components
+
+When building React applications, it's easy to fall into the trap of over-engineering or writing components that violate basic software principles. The **Bare Minimum Principles** provide a practical framework for writing code that's clear, maintainable, and follows established patterns.
+
+Let's explore how these principles apply to React component development through a real-world example.
+
+## The Bare Minimum Principles
+
+### 1. RTFM (Respect The Framework's Model)
+**Follow the framework's idioms and conventions**
+
+React and its ecosystem have established patterns. Fighting against them creates friction and confusion.
+
+```javascript
+// ❌ Fighting React patterns
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+  
+  componentDidMount() {
+    // Complex lifecycle logic
+  }
+}
+
+// ✅ Following React idioms
+function MyComponent() {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    // Clear, declarative effects
+  }, []);
+}
+```
+
+### 2. C4C (Coding For Clarity)
+**Write code that reads like mundane English**
+
+80% of programming is reading code. Make it easy.
+
+```javascript
+// ❌ Unclear intent
+const data = items.filter(x => x.status === 'active' && x.type === 'premium');
+
+// ✅ Clear intent
+const activePremiumUsers = users.filter(user => 
+  user.isActive && user.isPremium
+);
+```
+
+### 3. KISS (Keep It Simple Stupid)
+**Simplicity is clarity by design**
+
+Don't build abstractions until you need them.
+
+```javascript
+// ❌ Over-engineered
+const ConfigurableButton = ({ variant, size, color, theme, ...props }) => {
+  const computedStyles = useMemo(() => 
+    generateDynamicStyles(variant, size, color, theme), [variant, size, color, theme]
+  );
+  return <button style={computedStyles} {...props} />;
+};
+
+// ✅ Simple and clear
+const PrimaryButton = ({ children, onClick }) => (
+  <button className="btn-primary" onClick={onClick}>
+    {children}
+  </button>
+);
+```
+
+### 4. YAGNI (You Aren't Gonna Need It)
+**Don't build it until it's needed**
+
+Avoid speculative features and abstractions.
+
+### 5. HIPI (Hide Implementation, Present Interface)
+**Encapsulate complexity behind clear interfaces**
+
+```javascript
+// ❌ Implementation details exposed
+function UserProfile({ user }) {
+  const isVip = user.subscriptionTier === 'premium' && 
+                user.accountAge > 365 && 
+                user.totalSpent > 1000;
+  
+  return <div>{isVip && <VipBadge />}</div>;
+}
+
+// ✅ Implementation hidden
+function UserProfile({ user }) {
+  return <div>{user.isVip() && <VipBadge />}</div>;
+}
+```
+
+### 6. NBI (Naming by Intention)
+**Names should reflect business intent, not implementation**
+
+```javascript
+// ❌ Implementation-focused names
+const data = fetchData();
+const isValid = check(input);
+
+// ✅ Intent-focused names
+const userProfiles = fetchUserProfiles();
+const isEmailValid = validateEmailFormat(email);
+```
+
+## Real-World Example: PostContent Component Analysis
+
+Let's analyze a real React component from our blog application:
+
+```typescript
+export default function PostContent({ post }: PostContentProps) {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
+
+  return (
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h3" component="h1" gutterBottom>
+        {post.title}
+      </Typography>
+      
+      <Box sx={{ 
+        '& h1': { fontSize: '2rem', fontWeight: 700, mb: 2, mt: 3 },
+        '& h2': { fontSize: '1.75rem', fontWeight: 600, mb: 1.5, mt: 2.5 },
+        // ... 60+ lines of CSS-in-JS
+      }}>
+        <ReactMarkdown
+          components={{
+            code(props) {
+              const { className, children, ...rest } = props;
+              const match = /language-(\w+)/.exec(className || '');
+              const language = match ? match[1] : '';
+              
+              if (language === 'mermaid') {
+                return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+              }
+              
+              if (match) {
+                return (
+                  <SyntaxHighlighter
+                    style={isDarkMode ? oneDark : oneLight}
+                    language={language}
+                    // ... complex configuration
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                );
+              }
+              
+              return <code className={className} {...rest}>{children}</code>;
+            },
+          }}
+        >
+          {post.content}
+        </ReactMarkdown>
+      </Box>
+    </Box>
+  );
+}
+```
+
+### Principle Violations Analysis
+
+#### ❌ RTFM Violation
+**Issue:** Large `sx` prop instead of using MUI's styling patterns
+```typescript
+// Not idiomatic MUI
+<Box sx={{ 
+  '& h1': { fontSize: '2rem', ... },
+  '& h2': { fontSize: '1.75rem', ... },
+  // 60+ lines
+}}>
+```
+
+**Better:** Use MUI's theme system and styled components
+```typescript
+const useMarkdownStyles = () => {
+  const theme = useTheme();
+  return {
+    h1: theme.typography.h1,
+    h2: theme.typography.h2,
+    // Theme-based styling
+  };
+};
+```
+
+#### ❌ C4C Violation
+**Issue:** Component is too long (130+ lines) and mixes concerns
+
+The component handles:
+- Post metadata rendering
+- Markdown styling configuration  
+- Code block syntax highlighting
+- Theme detection
+- Mermaid diagram rendering
+
+#### ❌ HIPI Violation
+**Issue:** Implementation details leak into the component
+```typescript
+// Implementation details exposed
+const match = /language-(\w+)/.exec(className || '');
+const isDarkMode = theme.palette.mode === 'dark';
+```
+
+**Better:** Hide complexity behind clear interfaces
+```typescript
+// Hide implementation
+const codeLanguage = extractLanguageFromClassName(className);
+const syntaxTheme = getSyntaxHighlighterTheme();
+```
+
+#### ❌ NBI Violation
+**Issue:** Generic, unclear names
+```typescript
+const match = /language-(\w+)/.exec(className || '');  // What does it match?
+const { className, children, ...rest } = props;        // What's in rest?
+```
+
+**Better:** Intention-revealing names
+```typescript
+const languageMatch = /language-(\w+)/.exec(className || '');
+const { className, children, ...otherCodeProps } = props;
+```
+
+## The Refactoring Plan
+
+Following the bare minimum principles, here's how we can improve this component:
+
+### Step 1: Extract Code Block Logic (HIPI + C4C)
+```typescript
+// Hide implementation behind clear interface
+function CodeBlock({ className, children, ...props }) {
+  const codeLanguage = extractLanguageFromClassName(className);
+  
+  if (isMermaidDiagram(codeLanguage)) {
+    return <MermaidDiagram content={children} />;
+  }
+  
+  if (hasLanguage(codeLanguage)) {
+    return <SyntaxHighlightedCode language={codeLanguage}>{children}</SyntaxHighlightedCode>;
+  }
+  
+  return <InlineCode className={className} {...props}>{children}</InlineCode>;
+}
+```
+
+### Step 2: Extract Styling (RTFM + KISS)
+```typescript
+// Use MUI patterns instead of large sx prop
+const markdownStyles = {
+  h1: { fontSize: '2rem', fontWeight: 700, mb: 2, mt: 3 },
+  h2: { fontSize: '1.75rem', fontWeight: 600, mb: 1.5, mt: 2.5 },
+  // Clear, focused styling
+};
+```
+
+### Step 3: Simplify Main Component (KISS + C4C)
+```typescript
+export default function PostContent({ post }) {
+  return (
+    <article>
+      <PostHeader title={post.title} date={post.date} author={post.author} />
+      <MarkdownContent content={post.content} />
+    </article>
+  );
+}
+```
+
+## Key Takeaways
+
+1. **RTFM**: Follow your framework's patterns - they exist for good reasons
+2. **C4C**: If you need to scroll to understand a component, it's too complex
+3. **KISS**: Start simple, add complexity only when needed
+4. **HIPI**: Hide messy implementation details behind clean interfaces
+5. **NBI**: Names should tell you what something does in business terms
+
+## Defense of Craft
+
+These principles aren't rigid laws - they're guidelines that prevent common pitfalls. As you gain experience, you'll learn when breaking them serves a greater purpose. But until then, following these principles will save you from future pain and make your code more maintainable.
+
+The best engineers aren't those who never break the rules, but those who understand when and why to break them.
+
+---
+
+**Next Steps**: In our next post, we'll implement this refactoring step by step, showing how each principle improves code clarity and maintainability.
