@@ -179,6 +179,40 @@ npm run diagnose
 
 This will check your setup and identify common issues.
 
+### For Web-Only Users (No Local Setup)
+
+If you're editing files directly on GitHub and deployment stops working:
+
+1. **Check GitHub Actions Status**:
+   - Go to your repository's `Actions` tab
+   - Look for failed workflow runs (red X marks)
+   - Click on the failed run to see error details
+
+2. **Enable GitHub Actions** (if needed):
+   - In your repository, go to `Actions` tab
+   - If you see "Workflows aren't being run on this forked repository"
+   - Click "I understand my workflows, go ahead and enable them"
+
+3. **Verify Repository Secrets**:
+   - Go to `Settings` → `Secrets and variables` → `Actions`
+   - Ensure you have both secrets set:
+     - `CLOUDFLARE_API_TOKEN` (get from Cloudflare dashboard)
+     - `CLOUDFLARE_ACCOUNT_ID` (found in Cloudflare sidebar)
+
+4. **Check Your Branch**:
+   - Make sure you're editing files on the `main` branch
+   - GitHub Actions only triggers on `main` branch changes
+
+5. **Validate Post Format**:
+   - Ensure all `.mdx` files in `src/content/posts/` have proper frontmatter:
+   ```markdown
+   ---
+   title: "Your Post Title"
+   date: "2024-01-25"
+   excerpt: "Brief description"
+   ---
+   ```
+
 ### Common Issues
 
 **Q: My new posts don't show up**

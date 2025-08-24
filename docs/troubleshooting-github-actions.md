@@ -2,6 +2,72 @@
 
 This guide helps diagnose and fix common issues with the automated deployment workflow.
 
+## For Web-Only Users (GitHub Interface Only)
+
+If you're editing files directly on GitHub without a local development setup, follow these steps:
+
+### Step 1: Check GitHub Actions Status
+1. Go to your repository on GitHub
+2. Click the `Actions` tab
+3. Look for workflow runs with red X (failed) or yellow circle (in progress)
+4. Click on the most recent run to see details
+
+**Common error messages and solutions:**
+- "Error: Unable to find account" → Missing or wrong `CLOUDFLARE_ACCOUNT_ID`
+- "Authentication failed" → Missing or expired `CLOUDFLARE_API_TOKEN`
+- "Workflow not found" → GitHub Actions not enabled
+
+### Step 2: Enable GitHub Actions (If Needed)
+If you see "Workflows aren't being run on this forked repository":
+1. Click "I understand my workflows, go ahead and enable them"
+2. This is required for all forks - it's a GitHub security feature
+
+### Step 3: Set Up Repository Secrets
+This is the most common issue for web-only users:
+
+1. **Get your Cloudflare credentials:**
+   - Log into [Cloudflare Dashboard](https://dash.cloudflare.com)
+   - Account ID: Found in the right sidebar of any page
+   - API Token: Go to "My Profile" → "API Tokens" → "Create Token"
+     - Use "Workers:Edit" template
+     - Copy the token immediately (you can't see it again)
+
+2. **Add secrets to your GitHub repository:**
+   - Go to your repository on GitHub
+   - Click `Settings` tab (top of repository)
+   - In left sidebar: `Secrets and variables` → `Actions`
+   - Click "New repository secret"
+   - Add both:
+     - Name: `CLOUDFLARE_API_TOKEN`, Value: [your API token]
+     - Name: `CLOUDFLARE_ACCOUNT_ID`, Value: [your account ID]
+
+### Step 4: Verify Your Branch
+- Make sure you're editing files on the `main` branch (not `master`)
+- Check the branch dropdown when editing files
+- GitHub Actions only runs on pushes to `main`
+
+### Step 5: Check Your Post Format
+When adding new posts via GitHub web interface:
+
+**Correct format:**
+```markdown
+---
+title: "My Blog Post Title"
+date: "2024-01-25"
+excerpt: "A brief description of the post"
+---
+
+# My Blog Post Title
+
+Your content here...
+```
+
+**Common mistakes:**
+- Missing the `---` lines around frontmatter
+- Forgetting quotes around values
+- Wrong date format (use YYYY-MM-DD)
+- Missing required fields (title, date, excerpt)
+
 ## Quick Diagnosis Checklist
 
 When your GitHub Actions workflow stops working ("loopt toch weer niet door"), check these items in order:
