@@ -89,10 +89,6 @@ export default function PostContent({ post }: PostContentProps) {
         '& th:not(:last-child), & td:not(:last-child)': {
           borderRight: 1,
           borderColor: 'divider'
-        },
-        // Syntax highlighter overrides
-        '& .react-syntax-highlighter-line-number': {
-          color: 'text.secondary !important'
         }
       }}>
         <ReactMarkdown
@@ -111,21 +107,18 @@ export default function PostContent({ post }: PostContentProps) {
               // Handle code blocks with syntax highlighting
               if (match) {
                 return (
-                  <Box sx={{ mb: 2, '& pre': { margin: '0 !important' } }}>
+                  <Box 
+                    className="syntax-highlighter-container"
+                    sx={{ mb: 2 }}
+                  >
                     <SyntaxHighlighter
                       style={isDarkMode ? oneDark : oneLight}
                       language={language}
                       PreTag="div"
                       showLineNumbers={true}
-                      lineNumberStyle={{
-                        minWidth: '3em',
-                        paddingRight: '1em',
-                        textAlign: 'right',
-                        userSelect: 'none'
-                      }}
+                      wrapLines={true}
                       customStyle={{
                         margin: 0,
-                        borderRadius: '0.5rem',
                         fontSize: '0.875rem',
                         lineHeight: '1.5'
                       }}
