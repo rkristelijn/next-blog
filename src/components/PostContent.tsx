@@ -7,9 +7,11 @@
  * 
  * Supports both regular markdown and MDX content from frontmatter.
  * Includes Mermaid diagram support for code blocks with language "mermaid".
+ * Includes GitHub Flavored Markdown support for tables, strikethrough, etc.
  */
 
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Typography, Box, Stack } from '@mui/material';
 import type { PostContentProps } from '@/types';
 import Mermaid from './Mermaid';
@@ -61,9 +63,43 @@ export default function PostContent({ post }: PostContentProps) {
             borderRadius: 0,
             color: 'text.primary'
           }
+        },
+        // Table styling
+        '& table': {
+          width: '100%',
+          borderCollapse: 'collapse',
+          mb: 2,
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: '0.5rem',
+          overflow: 'hidden'
+        },
+        '& th': {
+          backgroundColor: 'action.hover',
+          padding: '0.75rem',
+          textAlign: 'left',
+          fontWeight: 600,
+          borderBottom: 1,
+          borderColor: 'divider'
+        },
+        '& td': {
+          padding: '0.75rem',
+          borderBottom: 1,
+          borderColor: 'divider',
+          '&:last-child': {
+            borderRight: 0
+          }
+        },
+        '& tr:last-child td': {
+          borderBottom: 0
+        },
+        '& th:not(:last-child), & td:not(:last-child)': {
+          borderRight: 1,
+          borderColor: 'divider'
         }
       }}>
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             code(props) {
               const { className, children } = props;
