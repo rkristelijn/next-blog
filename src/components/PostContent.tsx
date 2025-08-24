@@ -65,18 +65,19 @@ export default function PostContent({ post }: PostContentProps) {
       }}>
         <ReactMarkdown
           components={{
-            code({ node, inline, className, children, ...props }) {
+            code(props) {
+              const { className, children } = props;
               const match = /language-(\w+)/.exec(className || '');
               const language = match ? match[1] : '';
               
               // Handle Mermaid diagrams
-              if (!inline && language === 'mermaid') {
+              if (language === 'mermaid') {
                 return <Mermaid chart={String(children).replace(/\n$/, '')} />;
               }
               
               // Regular code blocks and inline code
               return (
-                <code className={className} {...props}>
+                <code className={className}>
                   {children}
                 </code>
               );
