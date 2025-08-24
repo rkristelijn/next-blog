@@ -6,11 +6,13 @@
  * and provides consistent styling across all blog posts.
  * 
  * Supports both regular markdown and MDX content from frontmatter.
+ * Includes Mermaid diagram support for code blocks with language "mermaid".
  */
 
 import ReactMarkdown from 'react-markdown';
 import { Typography, Box, Stack } from '@mui/material';
 import type { PostContentProps } from '@/types';
+import Mermaid from './Mermaid';
 
 /**
  * PostContent component for rendering blog post content
@@ -61,7 +63,29 @@ export default function PostContent({ post }: PostContentProps) {
           }
         }
       }}>
-        <ReactMarkdown>{post.content}</ReactMarkdown>
+        <ReactMarkdown
+          components={{
+            code(props) {
+              const { className, children } = props;
+              const match = /language-(\w+)/.exec(className || '');
+              const language = match ? match[1] : '';
+              
+              // Handle Mermaid diagrams
+              if (language === 'mermaid') {
+                return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+              }
+              
+              // Regular code blocks and inline code
+              return (
+                <code className={className}>
+                  {children}
+                </code>
+              );
+            },
+          }}
+        >
+          {post.content}
+        </ReactMarkdown>
       </Box>
     </Box>
   );

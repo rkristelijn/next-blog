@@ -1,0 +1,207 @@
+---
+title: "Testing Mermaid Diagrams in Blog Posts"
+date: "2024-08-24"
+author: "Remi Kristelijn"
+excerpt: "A test post to verify that Mermaid diagrams render correctly in our blog posts with proper theme support."
+---
+
+# Testing Mermaid Diagrams in Blog Posts
+
+This post tests the Mermaid diagram functionality in our blog. Mermaid allows us to create diagrams and flowcharts using simple text syntax.
+
+## Simple Flowchart
+
+Here's a basic flowchart showing a decision process:
+
+```mermaid
+flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> E[Fix Issue]
+    E --> B
+    C --> F[End]
+```
+
+## Git Workflow Diagram
+
+This diagram shows our new branch protection workflow:
+
+```mermaid
+gitGraph
+    commit id: "Initial"
+    commit id: "Feature 1"
+    
+    branch feature/new-feature
+    checkout feature/new-feature
+    commit id: "Work in progress"
+    commit id: "Feature complete"
+    
+    checkout main
+    commit id: "Hotfix"
+    
+    checkout feature/new-feature
+    merge main
+    commit id: "Merge main"
+    
+    checkout main
+    merge feature/new-feature
+    commit id: "Merge PR"
+```
+
+## Sequence Diagram
+
+Here's how the fork management process works:
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Fork
+    participant M as Main Repo
+    participant CI as GitHub Actions
+    
+    U->>F: Create fork
+    U->>F: Add personal content
+    U->>F: Make improvements
+    F->>M: Create pull request
+    M->>CI: Run automated checks
+    CI->>M: Validation results
+    M->>M: Review and selective merge
+    M->>F: Provide feedback
+```
+
+## Class Diagram
+
+The architecture of our blog system:
+
+```mermaid
+classDiagram
+    class Post {
+        +string title
+        +string date
+        +string author
+        +string excerpt
+        +string content
+        +string slug
+        +getSlug()
+        +validate()
+    }
+    
+    class PostService {
+        +getAllPosts()
+        +getPostBySlug()
+        +generatePostsData()
+    }
+    
+    class MermaidComponent {
+        +string chart
+        +string id
+        +render()
+    }
+    
+    PostService --> Post
+    Post --> MermaidComponent : uses
+```
+
+## Pie Chart
+
+Distribution of our documentation types:
+
+```mermaid
+pie title Documentation Types
+    "Technical Docs" : 40
+    "User Guides" : 30
+    "Troubleshooting" : 20
+    "Examples" : 10
+```
+
+## State Diagram
+
+The lifecycle of a blog post:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> Review : Submit
+    Review --> Published : Approve
+    Review --> Draft : Needs Changes
+    Published --> Archived : Archive
+    Archived --> Published : Restore
+    Published --> [*] : Delete
+```
+
+## Journey Map
+
+User experience with our blog template:
+
+```mermaid
+journey
+    title User Journey with Blog Template
+    section Discovery
+      Find template: 5: User
+      Read documentation: 4: User
+      Fork repository: 5: User
+    section Setup
+      Configure secrets: 3: User
+      First deployment: 2: User
+      Troubleshoot issues: 1: User
+      Get help: 4: User
+    section Usage
+      Write first post: 5: User
+      Add images: 4: User
+      Customize theme: 3: User
+      Share blog: 5: User
+```
+
+## Testing Different Themes
+
+These diagrams should automatically adapt to both light and dark themes. The Mermaid component uses the current Material-UI theme to configure colors and styling.
+
+### Features Tested:
+- ✅ Flowcharts with decision nodes
+- ✅ Git graphs with branches and merges
+- ✅ Sequence diagrams with multiple participants
+- ✅ Class diagrams with relationships
+- ✅ Pie charts with data visualization
+- ✅ State diagrams with transitions
+- ✅ Journey maps with emotional states
+- ✅ Theme-aware rendering (light/dark mode)
+- ✅ Responsive design for mobile devices
+
+## Code Example
+
+For comparison, here's regular code syntax highlighting:
+
+```javascript
+// Regular code block (not Mermaid)
+function generateMermaidId() {
+  return `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+console.log('This should be syntax highlighted, not rendered as a diagram');
+```
+
+And here's some TypeScript:
+
+```typescript
+interface MermaidProps {
+  chart: string;
+  id?: string;
+}
+
+const MermaidComponent: React.FC<MermaidProps> = ({ chart, id }) => {
+  // Component implementation
+  return <div>Mermaid diagram here</div>;
+};
+```
+
+## Conclusion
+
+If you can see properly rendered diagrams above (not just code blocks), then Mermaid integration is working correctly! The diagrams should:
+
+1. **Render as visual diagrams** instead of code blocks
+2. **Adapt to the current theme** (light/dark mode)
+3. **Be responsive** and work on mobile devices
+4. **Handle errors gracefully** if there are syntax issues
+
+This enables us to create rich, visual documentation and blog posts with flowcharts, architecture diagrams, and process flows directly in Markdown.

@@ -11,6 +11,7 @@ This documentation covers the architecture, setup, and development guidelines fo
 - [GitHub Actions Troubleshooting](troubleshooting-github-actions.md) - Fix deployment issues
 
 #### Dutch Versions (Nederlandse Versies)
+- [User Manual (NL)](USER-MANUAL-nl.md) - Complete guide in Dutch with Mermaid support
 - [Web User Checklist (NL)](web-user-checklist-nl.md) - Troubleshooting checklist in Dutch
 - [Easy Blogging Guide (NL)](EASY-BLOGGING-nl.md) - Quick start guide in Dutch
 
