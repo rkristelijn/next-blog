@@ -169,7 +169,7 @@ Detailed documentation is available in the [`./docs`](docs) folder:
 - [Developer Guide](docs/DEVELOPER-DOCS.md) - Fork management and contributions
 - [Architecture Overview](docs/architecture.md) - System design
 
-**Dutch versions available:** [Easy Blogging (NL)](docs/EASY-BLOGGING-nl.md), [Web Checklist (NL)](docs/web-user-checklist-nl.md)
+**Dutch versions available:** [User Manual (NL)](docs/USER-MANUAL-nl.md), [Easy Blogging (NL)](docs/EASY-BLOGGING-nl.md), [Web Checklist (NL)](docs/web-user-checklist-nl.md)
 
 ## 🆘 Troubleshooting
 

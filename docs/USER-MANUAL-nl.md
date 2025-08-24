@@ -1,6 +1,6 @@
-# 📖 User Manual - Next.js Blog
+# 📖 Gebruikershandleiding - Next.js Blog
 
-Een complete handleiding voor het gebruik van je Next.js blog, speciaal geschreven voor ontwikkeling in de GitHub browser IDE.
+Een complete handleiding voor het gebruik van je Next.js blog, speciaal geschreven voor gebruik in de GitHub browser IDE.
 
 ## 🚀 Snel starten
 
@@ -38,77 +38,76 @@ Meer tekst hier.
 - Lijst item 3
 
 **Belangrijke tekst** en *cursieve tekst*.
-
 ```
 
-## 📊 Creating Diagrams with Mermaid
+## 📊 Diagrammen maken met Mermaid
 
-### What is Mermaid?
-Mermaid allows you to create diagrams and flowcharts using simple text syntax. Perfect for technical documentation, process flows, and visual explanations.
+### Wat is Mermaid?
+Mermaid stelt je in staat om diagrammen en flowcharts te maken met eenvoudige tekst syntax. Perfect voor technische documentatie, procesflows en visuele uitleg.
 
-### How to Add Diagrams
+### Hoe voeg je diagrammen toe?
 
-Simply use a code block with `mermaid` as the language:
+Gebruik gewoon een code block met `mermaid` als taal:
 
 ````markdown
 ```mermaid
 flowchart TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Success]
-    B -->|No| D[Try Again]
+    A[Start] --> B{Beslissing}
+    B -->|Ja| C[Succes]
+    B -->|Nee| D[Probeer opnieuw]
 ```
 ````
 
-### Supported Diagram Types
+### Ondersteunde Diagram Types
 
-#### 1. Flowcharts
+#### 1. Flowcharts (Stroomdiagrammen)
 ```mermaid
 flowchart TD
-    A[Start] --> B{Is it working?}
-    B -->|Yes| C[Great!]
-    B -->|No| D[Debug]
+    A[Start] --> B{Werkt het?}
+    B -->|Ja| C[Geweldig!]
+    B -->|Nee| D[Debug]
 ```
 
-#### 2. Sequence Diagrams
+#### 2. Sequence Diagrams (Volgorde diagrammen)
 ```mermaid
 sequenceDiagram
-    User->>System: Request
-    System->>Database: Query
-    Database->>System: Result
-    System->>User: Response
+    Gebruiker->>Systeem: Verzoek
+    Systeem->>Database: Query
+    Database->>Systeem: Resultaat
+    Systeem->>Gebruiker: Antwoord
 ```
 
 #### 3. Git Graphs
 ```mermaid
 gitGraph
-    commit id: "Initial"
+    commit id: "Initieel"
     branch feature
-    commit id: "Feature work"
+    commit id: "Feature werk"
     checkout main
     merge feature
 ```
 
-#### 4. Pie Charts
+#### 4. Taartdiagrammen
 ```mermaid
 pie title Project Status
-    "Complete" : 60
-    "In Progress" : 30
-    "Todo" : 10
+    "Klaar" : 60
+    "Bezig" : 30
+    "Te doen" : 10
 ```
 
-### Mermaid Resources
+### Mermaid Bronnen
 
-- **Official Documentation**: https://mermaid.js.org/
+- **Officiële Documentatie**: https://mermaid.js.org/
 - **Live Editor**: https://mermaid.live/
-- **Syntax Guide**: https://mermaid.js.org/syntax/flowchart.html
-- **Examples Gallery**: https://mermaid.js.org/syntax/examples.html
+- **Syntax Gids**: https://mermaid.js.org/syntax/flowchart.html
+- **Voorbeelden Galerij**: https://mermaid.js.org/syntax/examples.html
 
-### Tips for Better Diagrams
+### Tips voor Betere Diagrammen
 
-1. **Keep it simple** - Don't overcrowd diagrams
-2. **Use descriptive labels** - Make nodes clear and readable
-3. **Test in live editor** - Use https://mermaid.live/ to test syntax
-4. **Consider mobile** - Diagrams should be readable on small screens
+1. **Houd het simpel** - Maak diagrammen niet te vol
+2. **Gebruik duidelijke labels** - Maak knooppunten helder en leesbaar
+3. **Test in live editor** - Gebruik https://mermaid.live/ om syntax te testen
+4. **Denk aan mobiel** - Diagrammen moeten leesbaar zijn op kleine schermen
 
 ## 🖼️ Plaatjes toevoegen
 
@@ -199,6 +198,21 @@ excerpt: "Dit is verplicht! Zonder excerpt verschijnt je post niet."
 <img src="/groot-plaatje.jpg" alt="plaatje" style="max-width: 400px; height: auto;" />
 ```
 
+### "Mijn Mermaid diagram wordt niet getoond!"
+**Oplossing**: Controleer de syntax:
+```markdown
+# Zorg dat je mermaid als taal specificeert:
+```mermaid
+flowchart TD
+    A --> B
+```
+# Niet gewoon:
+```
+flowchart TD
+    A --> B
+```
+```
+
 ### "404 error bij spaties in URL"
 **Oplossing**: Dit wordt automatisch opgelost. Spaties in titels worden omgezet naar hyphens in de URL.
 
@@ -218,7 +232,7 @@ function helloWorld() {
 
 ### Tabellen
 | Kolom 1 | Kolom 2 | Kolom 3 |
-|---------|---------|---------|
+|---------|---------|------------|
 | Data 1  | Data 2  | Data 3  |
 | Data 4  | Data 5  | Data 6  |
 
@@ -236,6 +250,11 @@ function helloWorld() {
 3. Kopieer de output naar je `.mdx` bestand
 4. Pas aan naar je wensen
 
+### Voor Mermaid diagrammen
+1. Ga naar https://mermaid.live/
+2. Test je diagram syntax
+3. Kopieer de werkende code naar je blog post
+
 ### Voor code problemen
 1. Kopieer je problematische code
 2. Vraag ChatGPT: "This Next.js blog code has an issue: [paste code]. Can you fix it?"
@@ -252,6 +271,7 @@ Je blog wordt automatisch gedeployed wanneer je:
 
 - **GitHub Issues**: Maak een issue aan in je repository
 - **ChatGPT**: Voor algemene vragen over Markdown/Next.js
+- **Mermaid Live Editor**: https://mermaid.live/ voor diagram hulp
 - **Deze documentatie**: Bookmark deze pagina voor snelle referentie
 
 ## 🎯 Snelle referentie
@@ -261,6 +281,7 @@ Je blog wordt automatisch gedeployed wanneer je:
 - [ ] Frontmatter compleet (title, date, author, excerpt)
 - [ ] Content geschreven
 - [ ] Plaatjes geüpload naar `public/`
+- [ ] Mermaid diagrammen getest op https://mermaid.live/
 - [ ] Gecommit naar main branch
 - [ ] Wacht 2 minuten voor deployment
 
@@ -270,6 +291,12 @@ Je blog wordt automatisch gedeployed wanneer je:
 - [ ] Geüpload naar `public/`
 - [ ] Juiste pad in markdown: `/plaatje.jpg`
 - [ ] Alt tekst toegevoegd
+
+### Mermaid checklist:
+- [ ] Syntax getest op https://mermaid.live/
+- [ ] Code block gebruikt met `mermaid` als taal
+- [ ] Diagram is niet te complex voor mobiele weergave
+- [ ] Labels zijn duidelijk en leesbaar
 
 ---
 
