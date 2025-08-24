@@ -169,6 +169,16 @@ Detailed documentation is available in the [`./docs`](docs) folder:
 
 ## 🆘 Troubleshooting
 
+### Quick Diagnosis
+
+If your GitHub Actions deployment stops working, run the diagnostic tool:
+
+```bash
+npm run diagnose
+```
+
+This will check your setup and identify common issues.
+
 ### Common Issues
 
 **Q: My new posts don't show up**
@@ -182,6 +192,22 @@ A: Check that:
 1. All posts have required frontmatter (`title`, `date`, `excerpt`)
 2. No syntax errors in your markdown
 3. All dependencies are installed
+
+**Q: GitHub Actions workflow not running**
+A: Verify that:
+1. You have the correct secrets set in your repository:
+   - `CLOUDFLARE_API_TOKEN` (with Workers:Edit permissions)
+   - `CLOUDFLARE_ACCOUNT_ID`
+2. The workflow file is in `.github/workflows/deploy.yml`
+3. You're pushing to the `main` branch (not `master` or other branches)
+4. GitHub Actions are enabled in your repository settings
+
+**Q: Cloudflare deployment fails**
+A: Check that:
+1. Your Cloudflare API token has the correct permissions (Workers:Edit, Zone:Read)
+2. Your account ID is correct (found in Cloudflare dashboard sidebar)
+3. The worker name doesn't conflict with existing workers
+4. You have sufficient Cloudflare Workers quota
 
 **Q: Theme not working**
 A: Clear your browser cache and check that JavaScript is enabled.
@@ -199,6 +225,9 @@ This template is being used by:
 - Technical documentation
 - Company blogs
 - Portfolio sites
+
+**Active Forks:**
+- [Gertjan's Blog](https://github.com/gjvdptev/next-blog) - Managed by gjvdptev
 
 ## 📄 License
 
