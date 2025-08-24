@@ -79,31 +79,12 @@ const aggressiveOptimize = async () => {
       }
     }
     
-    // 5. Optimize the main handler by removing development-only code
+    // 5. Skip handler optimization to avoid breaking code
     const handlerPath = path.join(OPEN_NEXT_DIR, 'server-functions', 'default', 'handler.mjs');
     if (fs.existsSync(handlerPath)) {
-      console.log('🔧 Optimizing main handler...');
-      let handlerContent = fs.readFileSync(handlerPath, 'utf8');
-      const originalSize = handlerContent.length;
-      
-      // Remove development-only imports and code
-      handlerContent = handlerContent
-        .replace(/\/\*[\s\S]*?\*\//g, '') // Remove block comments
-        .replace(/\/\/.*$/gm, '') // Remove line comments
-        .replace(/console\.debug\([^)]*\);?/g, '') // Remove debug logs
-        .replace(/console\.trace\([^)]*\);?/g, '') // Remove trace logs
-        .replace(/\n\s*\n/g, '\n') // Remove empty lines
-        .trim();
-      
-      const newSize = handlerContent.length;
-      const saved = originalSize - newSize;
-      
-      if (saved > 1000) { // Only write if we saved significant space
-        fs.writeFileSync(handlerPath, handlerContent);
-        console.log(`🔧 Handler optimized: ${(saved / 1024).toFixed(1)}KB saved`);
-      } else {
-        console.log('ℹ️  Handler already optimized');
-      }
+      console.log('ℹ️  Skipping handler optimization to avoid breaking regex patterns');
+      const size = fs.statSync(handlerPath).size;
+      console.log(`📊 Handler size: ${(size / 1024).toFixed(1)}KB (unchanged for safety)`);
     }
     
     // 6. Calculate total savings
