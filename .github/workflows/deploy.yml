@@ -1,5 +1,8 @@
 name: Deploy to Cloudflare Pages
 
+# This workflow deploys to Cloudflare Pages (no size limits)
+# Switched from Workers due to 3MB bundle size constraints
+
 on:
   push:
     branches:
